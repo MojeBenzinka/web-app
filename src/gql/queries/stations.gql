@@ -1,0 +1,12 @@
+query Stations {
+  stations {
+    id
+    lat
+    lon
+    company {
+      id
+      name
+      logo_img
+    }
+  }
+}

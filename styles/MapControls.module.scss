@@ -1,0 +1,13 @@
+@import "./breakpoints";
+
+.locationButton {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  z-index: 2500;
+}
+
+.mapContainer {
+  width: 100%;
+  height: 100%;
+}

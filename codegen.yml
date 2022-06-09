@@ -1,0 +1,15 @@
+overwrite: true
+config:
+  withHooks: true
+schema:
+  - https://api.kdenatankuju.cz/graphql
+documents: "**/*.gql"
+generates:
+  src/gql/types/index.tsx:
+    plugins:
+      - "typescript"
+      - "typescript-operations"
+      - "typescript-react-apollo"
+  ./graphql.schema.json:
+    plugins:
+      - "introspection"
