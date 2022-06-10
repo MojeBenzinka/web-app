@@ -17,6 +17,7 @@ const Stations: React.FC = () => {
   const companyIds = useRecoilValue(selectedCompanies);
   // const [zoomLevel, setZoomLevel] = useState<number>(1);
   const map = useMap();
+  const bounds = map.getBounds();
 
   const [canShowStations, setCanShowStations] = useState(true);
 
@@ -35,26 +36,38 @@ const Stations: React.FC = () => {
   //   return z;
   // }, [z]);
 
-  const onMove = (event: LeafletEvent) => {
-    if (timer) {
-      clearTimeout(timer);
-      // console.log("waiting for user to stop pls");
-    }
-    timer = setTimeout(() => {
-      onChange(event, map.getZoom());
-    }, 1000);
-  };
+  const visibleMarkers = useMemo<Station[]>(() => {
+    if (!data || !data.stations) return [];
 
-  const onChange = (event: LeafletEvent, z: number) => {
-    // const z = map.getZoom();
-    //if (!canShow) return;
-    const bounds = map.getBounds();
-    const north = bounds.getNorth();
-    const south = bounds.getSouth();
-    const east = bounds.getEast();
-    const west = bounds.getWest();
-    if (canShowS(z)) refetch({ north, west, south, east, companyIds });
-  };
+    const stations = data.stations as Station[];
+
+    return stations.filter((s) => {
+      const { lat, lon } = s;
+
+      return bounds.contains([lat, lon]);
+    });
+  }, [data, bounds]);
+
+  // const onMove = (event: LeafletEvent) => {
+  //   if (timer) {
+  //     clearTimeout(timer);
+  //     // console.log("waiting for user to stop pls");
+  //   }
+  //   timer = setTimeout(() => {
+  //     onChange(event, map.getZoom());
+  //   }, 1000);
+  // };
+
+  // const onChange = (event: LeafletEvent, z: number) => {
+  //   // const z = map.getZoom();
+  //   //if (!canShow) return;
+  //   const bounds = map.getBounds();
+  //   const north = bounds.getNorth();
+  //   const south = bounds.getSouth();
+  //   const east = bounds.getEast();
+  //   const west = bounds.getWest();
+  //   if (canShowS(z)) refetch({ north, west, south, east, companyIds });
+  // };
 
   const updateZoom = () => {
     const z = map.getZoom();
@@ -65,20 +78,20 @@ const Stations: React.FC = () => {
   };
 
   useEffect(() => {
-    map.addEventListener("moveend", onMove);
+    // map.addEventListener("moveend", onMove);
     map.addEventListener("zoomend", updateZoom);
 
     return () => {
-      map.removeEventListener("moveend", onMove);
+      // map.removeEventListener("moveend", onMove);
       map.removeEventListener("zoomend", updateZoom);
     };
   }, []);
 
-  const markers = useMemo<Station[]>(() => {
-    if (!data || !data.stations) return [];
-    // console.log("Showing", data.stations.length, "stations");
-    return data.stations as Station[];
-  }, [data]);
+  // const markers = useMemo<Station[]>(() => {
+  //   if (!data || !data.stations) return [];
+  //   // console.log("Showing", data.stations.length, "stations");
+  //   return data.stations as Station[];
+  // }, [data]);
 
   if (loading && !previousData) {
     return <CircularProgress />;
@@ -101,7 +114,10 @@ const Stations: React.FC = () => {
           </Paper>
         </Box>
       </Fade>
-      {loading &&
+      {visibleMarkers.map((station) => (
+        <StationMarker station={station as Station} key={station?.id} />
+      ))}
+      {/* {loading &&
         previousData &&
         canShowStations &&
         previousData.stations?.map((station) => (
@@ -110,7 +126,7 @@ const Stations: React.FC = () => {
       {canShowStations &&
         markers.map((station) => (
           <StationMarker station={station as Station} key={station?.id} />
-        ))}
+        ))} */}
     </>
   );
 };
