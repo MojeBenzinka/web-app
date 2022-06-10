@@ -1,5 +1,17 @@
-query Stations {
-  stations {
+query Stations(
+  $companyIds: [String]
+  $north: Float
+  $south: Float
+  $east: Float
+  $west: Float
+) {
+  stations(
+    companyIds: $companyIds
+    north: $north
+    south: $south
+    east: $east
+    west: $west
+  ) {
     id
     lat
     lon
@@ -7,6 +19,29 @@ query Stations {
       id
       name
       logo_img
+    }
+  }
+}
+
+query Station($stationId: ID!) {
+  station(id: $stationId) {
+    id
+    pricesHistory {
+      id
+      createdAt
+      updatedAt
+      currency
+      price
+      type {
+        id
+        name
+        description
+        superType {
+          cat
+          name
+          id
+        }
+      }
     }
   }
 }

@@ -7,14 +7,17 @@ import theme from "../src/theme/theme";
 import NoJS from "../components/nojs/nojs";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
+import useMediaQuery from "@mui/material/useMediaQuery";
 
 const queryClient = new QueryClient();
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
+  const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
   return (
     <>
       <RecoilRoot>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={theme(prefersDarkMode)}>
           <noscript>
             <NoJS />
           </noscript>

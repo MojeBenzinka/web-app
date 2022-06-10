@@ -18,6 +18,8 @@ const Map: React.FC = () => {
       zoom={13}
       scrollWheelZoom={true}
       className={styles.mapContainer}
+      zoomControl={false}
+      doubleClickZoom={false}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
@@ -25,6 +27,7 @@ const Map: React.FC = () => {
       />
       <SearchPanel />
       <Stations />
+
       <LocationLayer />
     </MapContainer>
   );

@@ -1,24 +1,24 @@
 import IconButton from "@mui/material/IconButton";
 import Paper from "@mui/material/Paper";
-import TextField from "@mui/material/TextField";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styles from "../../styles/SearchPanel.module.scss";
 import SearchIcon from "@mui/icons-material/Search";
 import FormControl from "@mui/material/FormControl";
-import InputLabel from "@mui/material/InputLabel";
 import Input from "@mui/material/Input";
-import InputAdornment from "@mui/material/InputAdornment";
 import {
-  CircularProgress,
   Collapse,
+  LinearProgress,
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
 } from "@mui/material";
 import { useMap } from "react-leaflet";
 import CloseIcon from "@mui/icons-material/Close";
+import { useForm } from "react-hook-form";
+import { useShortcuts } from "react-shortcuts-hook";
+import CompanyFilter from "../map/company-select";
+import Box from "@mui/system/Box";
 
 const ariaLabel = { "aria-label": "Search Field" };
 
@@ -37,11 +37,19 @@ export interface ISearchResult {
   icon: string;
 }
 
+interface ISearch {
+  query: string;
+}
+
 const SearchPanel: React.FC = () => {
-  const [searchValue, setSearchValue] = useState("");
+  const { register, handleSubmit, watch, reset, setFocus } = useForm<ISearch>();
+
   const [searchResults, setSearchResults] = useState<ISearchResult[] | null>(
     null
   );
+
+  useShortcuts(["control", "q"], () => setFocus("query"), []);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const map = useMap();
@@ -51,12 +59,18 @@ const SearchPanel: React.FC = () => {
   };
 
   const handleClear = () => {
-    setSearchValue("");
+    reset({ query: "" });
     setSearchResults(null);
   };
 
-  const handleSearch = async () => {
-    const trimmed = searchValue.toLowerCase().trim();
+  useEffect(() => {
+    if (searchResults) {
+      setSearchResults(null);
+    }
+  }, [watch("query")]);
+
+  const handleSearch = async (data: ISearch) => {
+    const trimmed = data.query.toLowerCase().trim();
     if (trimmed.length === 0) return;
     setIsLoading(true);
     try {
@@ -80,28 +94,34 @@ const SearchPanel: React.FC = () => {
   return (
     <div className={styles.container}>
       <Paper sx={{ padding: 1 }}>
-        <FormControl fullWidth variant="standard">
-          {/* <InputLabel htmlFor="standard-adornment-password">Search</InputLabel> */}
-          <Input
-            id="standard-adornment-password"
-            type={"text"}
-            value={searchValue}
-            autoComplete="off"
-            fullWidth
-            placeholder="Search"
-            onChange={(e) => setSearchValue(e.target.value)}
-            endAdornment={
-              <IconButton
-                size="large"
-                onClick={!!searchResults ? handleClear : handleSearch}
-              >
-                {!searchResults && <SearchIcon />}
-                {!!searchResults && <CloseIcon />}
-              </IconButton>
-            }
-          />
-        </FormControl>
-        {isLoading && <CircularProgress />}
+        <Box display="flex" alignItems="center">
+          <form onSubmit={handleSubmit(handleSearch)}>
+            <FormControl fullWidth variant="standard">
+              {/* <InputLabel htmlFor="standard-adornment-password">Search</InputLabel> */}
+              <Input
+                id="standard-adornment-password"
+                type={"text"}
+                autoComplete="off"
+                fullWidth
+                placeholder="Search (Ctrl + Q)"
+                {...register("query")}
+                endAdornment={
+                  <IconButton
+                    size="large"
+                    onClick={
+                      !!searchResults ? handleClear : handleSubmit(handleSearch)
+                    }
+                  >
+                    {!searchResults && <SearchIcon />}
+                    {!!searchResults && <CloseIcon />}
+                  </IconButton>
+                }
+              />
+            </FormControl>
+          </form>
+          <CompanyFilter />
+        </Box>
+        {isLoading && <LinearProgress variant="indeterminate" />}
         <Collapse
           unmountOnExit
           in={!!searchResults && searchResults.length > 0}

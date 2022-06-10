@@ -1,15 +1,25 @@
 import { createTheme } from "@mui/material/styles";
 import { green, purple } from "@mui/material/colors";
+import darkScrollbar from "@mui/material/darkScrollbar";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: purple[500],
+const theme = (dark: boolean) =>
+  createTheme({
+    components: {
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: dark ? darkScrollbar() : null,
+        },
+      },
     },
-    secondary: {
-      main: green[500],
+    palette: {
+      mode: dark ? "dark" : "light",
+      primary: {
+        main: purple[500],
+      },
+      secondary: {
+        main: green[500],
+      },
     },
-  },
-});
+  });
 
 export default theme;

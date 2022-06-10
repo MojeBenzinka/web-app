@@ -42,7 +42,17 @@ const InfoPanel: React.FC = () => {
               </IconButton>
             </Grid>
           </Grid>
-          <PriceChart />
+          {selected && <PriceChart stationId={selected.id} />}
+          <Box sx={{ marginTop: 3 }}>
+            Station ID:
+            <br />
+            <code>{selected?.id}</code>
+          </Box>
+          <Box sx={{ marginTop: 3 }}>
+            Company ID:
+            <br />
+            <code>{selected?.company?.id}</code>
+          </Box>
         </Box>
       </Drawer>
     </div>

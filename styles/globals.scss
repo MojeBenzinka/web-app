@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&display=swap");
 
 html,
 body {
@@ -14,3 +15,35 @@ body {
   z-index: 5000;
   pointer-events: none;
 }
+
+.selected {
+  border: 4.5px dashed #0d0397;
+  animation-name: pulseBorder !important;
+  animation-iteration-count: infinite;
+}
+
+@keyframes pulseBorder {
+  from {
+    border: solid 1px #0d0397;
+  }
+  to {
+    border: solid 10px #0d0397;
+  }
+}
+
+code {
+  font-family: "Fira Code", monospace;
+}
+
+.test {
+  height: 20px;
+  width: 20px;
+  background: #0d0397;
+}
+
+// body {
+//   @media (prefers-color-scheme: dark) {
+//     background-color: #1a1a1a;
+//     color: #fafafa;
+//   }
+// }
