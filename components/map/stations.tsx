@@ -114,9 +114,10 @@ const Stations: React.FC = () => {
           </Paper>
         </Box>
       </Fade>
-      {visibleMarkers.map((station) => (
-        <StationMarker station={station as Station} key={station?.id} />
-      ))}
+      {canShowStations &&
+        visibleMarkers.map((station) => (
+          <StationMarker station={station as Station} key={station?.id} />
+        ))}
       {/* {loading &&
         previousData &&
         canShowStations &&
