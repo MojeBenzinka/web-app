@@ -93,7 +93,7 @@ const SearchPanel: React.FC = () => {
 
   return (
     <div className={styles.container}>
-      <Paper sx={{ padding: 1 }}>
+      <Paper sx={{ padding: 1, pointerEvents: "all" }}>
         <Box display="flex" alignItems="center">
           <form onSubmit={handleSubmit(handleSearch)}>
             <FormControl fullWidth variant="standard">
