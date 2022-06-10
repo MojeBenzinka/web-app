@@ -3,14 +3,28 @@ import Drawer from "@mui/material/Drawer";
 import Grid from "@mui/material/Grid";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
-import React from "react";
+import React, { useEffect } from "react";
 import { useRecoilState } from "recoil";
 import selectedStation from "../../src/atoms/selected-station";
 import CloseIcon from "@mui/icons-material/Close";
 import PriceChart from "./price-chart";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { useClipboard } from "use-clipboard-copy";
+import { useSnackbar } from "notistack";
 
 const InfoPanel: React.FC = () => {
   const [selected, setSelected] = useRecoilState(selectedStation);
+  const { copy } = useClipboard();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const makeCopy = (text?: string) => () => {
+    if (!text) return;
+    copy(text);
+    enqueueSnackbar("Copied to clipboard", {
+      variant: "success",
+    });
+  };
 
   return (
     <div>
@@ -47,11 +61,17 @@ const InfoPanel: React.FC = () => {
             Station ID:
             <br />
             <code>{selected?.id}</code>
+            <IconButton onClick={makeCopy(selected?.id.trim())}>
+              <ContentCopyIcon />
+            </IconButton>
           </Box>
           <Box sx={{ marginTop: 3 }}>
             Company ID:
             <br />
             <code>{selected?.company?.id}</code>
+            <IconButton onClick={makeCopy(selected?.company?.id.trim())}>
+              <ContentCopyIcon />
+            </IconButton>
           </Box>
         </Box>
       </Drawer>

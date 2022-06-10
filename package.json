@@ -23,6 +23,7 @@
     "moment": "^2.29.3",
     "next": "12.1.6",
     "nominatim-js": "^1.0.10",
+    "notistack": "^2.0.5",
     "react": "^18.1.0",
     "react-charts": "^3.0.0-beta.36",
     "react-dom": "^18.1.0",
@@ -32,6 +33,7 @@
     "react-query": "^3.39.1",
     "react-shortcuts-hook": "^1.1.2",
     "recoil": "^0.7.3",
+    "use-clipboard-copy": "^0.2.0",
     "use-keyboard-shortcut": "^1.1.4"
   },
   "devDependencies": {

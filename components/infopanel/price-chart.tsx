@@ -105,6 +105,11 @@ const PriceChart: React.FC<IProps> = ({ stationId }) => {
         min: 20,
         scaleType: "linear",
         getValue: (datum) => datum.secondary,
+        formatters: {
+          scale: (date) => date?.toFixed(2),
+          // tooltip: (date) => date?.toFixed(2),
+          // cursor: (date) => date?.toFixed(2),
+        },
       },
     ],
     []

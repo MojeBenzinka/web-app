@@ -16,14 +16,17 @@ const canShowS = (zLevel: number) => zLevel >= 12;
 const Stations: React.FC = () => {
   const companyIds = useRecoilValue(selectedCompanies);
   // const [zoomLevel, setZoomLevel] = useState<number>(1);
+
   const map = useMap();
   const bounds = map.getBounds();
+  const [center, setCenter] = useState(map.getCenter());
+  // const center = map.getCenter();
 
   const [canShowStations, setCanShowStations] = useState(true);
 
-  let timer: NodeJS.Timeout = setTimeout(() => {}, 1500);
+  // let timer: NodeJS.Timeout = setTimeout(() => {}, 1500);
 
-  const { data, loading, refetch, previousData } = useStationsQuery({
+  const { data, loading, previousData } = useStationsQuery({
     variables: {
       companyIds,
       // lat: map?.getCenter()?.lat,
@@ -41,12 +44,14 @@ const Stations: React.FC = () => {
 
     const stations = data.stations as Station[];
 
-    return stations.filter((s) => {
+    const stats = stations.filter((s) => {
       const { lat, lon } = s;
 
       return bounds.contains([lat, lon]);
     });
-  }, [data, bounds]);
+
+    return stats;
+  }, [data, bounds, center]);
 
   // const onMove = (event: LeafletEvent) => {
   //   if (timer) {
@@ -69,8 +74,21 @@ const Stations: React.FC = () => {
   //   if (canShowS(z)) refetch({ north, west, south, east, companyIds });
   // };
 
+  const moved = () => {
+    const z = map.getZoom();
+
+    if (z >= 12) {
+      const c = map.getCenter();
+      setCenter(c);
+    }
+  };
+
   const updateZoom = () => {
     const z = map.getZoom();
+    if (z >= 12) {
+      const c = map.getCenter();
+      setCenter(c);
+    }
 
     if (!isNaN(z)) {
       setCanShowStations(canShowS(z));
@@ -78,11 +96,11 @@ const Stations: React.FC = () => {
   };
 
   useEffect(() => {
-    // map.addEventListener("moveend", onMove);
+    map.addEventListener("moveend", moved);
     map.addEventListener("zoomend", updateZoom);
 
     return () => {
-      // map.removeEventListener("moveend", onMove);
+      map.removeEventListener("moveend", moved);
       map.removeEventListener("zoomend", updateZoom);
     };
   }, []);

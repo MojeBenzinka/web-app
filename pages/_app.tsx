@@ -8,6 +8,7 @@ import NoJS from "../components/nojs/nojs";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 import useMediaQuery from "@mui/material/useMediaQuery";
+import { SnackbarProvider } from "notistack";
 
 const queryClient = new QueryClient();
 
@@ -18,14 +19,16 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
     <>
       <RecoilRoot>
         <ThemeProvider theme={theme(prefersDarkMode)}>
-          <noscript>
-            <NoJS />
-          </noscript>
-          <ApolloProvider client={client}>
-            <QueryClientProvider client={queryClient}>
-              <Component {...pageProps} />
-            </QueryClientProvider>
-          </ApolloProvider>
+          <SnackbarProvider className="snacks">
+            <noscript>
+              <NoJS />
+            </noscript>
+            <ApolloProvider client={client}>
+              <QueryClientProvider client={queryClient}>
+                <Component {...pageProps} />
+              </QueryClientProvider>
+            </ApolloProvider>
+          </SnackbarProvider>
         </ThemeProvider>
         <div id="lag"></div>
       </RecoilRoot>

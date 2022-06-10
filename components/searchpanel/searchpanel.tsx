@@ -56,6 +56,7 @@ const SearchPanel: React.FC = () => {
 
   const move = (lat: number, lon: number) => {
     map.panTo([lat, lon]);
+    map.setZoom(14);
   };
 
   const handleClear = () => {
