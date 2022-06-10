@@ -17,10 +17,12 @@ import {
   DialogContent,
   DialogActions,
   CircularProgress,
+  Tooltip,
 } from "@mui/material";
 import selectedCompanies from "../../src/atoms/selected-companies";
 import { useRecoilState } from "recoil";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 
 export interface SimpleDialogProps {
   open: boolean;
@@ -30,6 +32,7 @@ export interface SimpleDialogProps {
 
 const CompanyFilter: React.FC = () => {
   const [open, setOpen] = React.useState(false);
+  const { t } = useTranslation();
 
   const [selectedComps, setSelectedComps] = useRecoilState(selectedCompanies);
   const [selectedLocal, setSelectedLocal] = useState(selectedComps);
@@ -70,11 +73,13 @@ const CompanyFilter: React.FC = () => {
 
   return (
     <div>
-      <IconButton aria-label="delete" onClick={handleClickOpen}>
-        <FilterAltIcon />
-      </IconButton>
+      <Tooltip title={t("search:filter")}>
+        <IconButton aria-label={t("search:filter")} onClick={handleClickOpen}>
+          <FilterAltIcon />
+        </IconButton>
+      </Tooltip>
       <Dialog onClose={handleClose} open={open} fullWidth maxWidth="sm">
-        <DialogTitle>Filtr</DialogTitle>
+        <DialogTitle>{t("search:filterOptions:companies")}</DialogTitle>
         <DialogContent>
           <List sx={{ pt: 0 }}>
             {(companies as Company[]).map((company) => (
@@ -102,9 +107,11 @@ const CompanyFilter: React.FC = () => {
           </List>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>Cancel</Button>
+          <Button onClick={handleClose}>
+            {t("search:filterOptions:cancel")}
+          </Button>
           <Button onClick={save} variant="contained">
-            Save
+            {t("search:filterOptions:save")}
           </Button>
         </DialogActions>
       </Dialog>

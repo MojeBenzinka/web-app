@@ -5,6 +5,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/system/Box";
 import { DivIcon, Icon, LeafletEvent } from "leaflet";
 import React, { useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Marker, useMap } from "react-leaflet";
 import { useRecoilState, useRecoilValue } from "recoil";
 import selectedCompanies from "../../src/atoms/selected-companies";
@@ -21,6 +22,8 @@ const Stations: React.FC = () => {
   const bounds = map.getBounds();
   const [center, setCenter] = useState(map.getCenter());
   // const center = map.getCenter();
+
+  const { t } = useTranslation();
 
   const [canShowStations, setCanShowStations] = useState(true);
 
@@ -127,8 +130,11 @@ const Stations: React.FC = () => {
             alignItems: "center",
           }}
         >
-          <Paper sx={{ padding: 4, opacity: 0.85 }}>
-            <Typography variant="h6">Zoom in to see stations</Typography>
+          <Paper sx={{ padding: 4, opacity: 0.85, textAlign: "center" }}>
+            <Typography variant="h6">{t("map:zoomToSee")}</Typography>
+            <Typography variant="body2">
+              {t("map:zoomToSeeDescription")}
+            </Typography>
           </Paper>
         </Box>
       </Fade>
@@ -171,6 +177,7 @@ const StationMarker: React.FC<IStationMarker> = ({ station }) => {
   const select = (station: Station) => {
     setSelected(station);
     map.panTo([station.lat, station.lon], { animate: true });
+    // map.setView([station.lat, station.lon], 14, { animate: true });
   };
 
   const isSelected = useMemo(() => station.id === selected?.id, [selected]);

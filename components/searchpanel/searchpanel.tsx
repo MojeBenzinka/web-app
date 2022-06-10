@@ -19,6 +19,7 @@ import { useForm } from "react-hook-form";
 import { useShortcuts } from "react-shortcuts-hook";
 import CompanyFilter from "../map/company-select";
 import Box from "@mui/system/Box";
+import { useTranslation } from "react-i18next";
 
 const ariaLabel = { "aria-label": "Search Field" };
 
@@ -48,6 +49,8 @@ const SearchPanel: React.FC = () => {
     null
   );
 
+  const { t } = useTranslation();
+
   useShortcuts(["control", "q"], () => setFocus("query"), []);
 
   const [isLoading, setIsLoading] = useState(false);
@@ -55,8 +58,9 @@ const SearchPanel: React.FC = () => {
   const map = useMap();
 
   const move = (lat: number, lon: number) => {
-    map.panTo([lat, lon]);
-    map.setZoom(14);
+    // map.panTo([lat, lon]);
+    // map.setZoom(14);
+    map.setView([lat, lon], 14, { animate: true });
   };
 
   const handleClear = () => {
@@ -100,11 +104,13 @@ const SearchPanel: React.FC = () => {
             <FormControl fullWidth variant="standard">
               {/* <InputLabel htmlFor="standard-adornment-password">Search</InputLabel> */}
               <Input
-                id="standard-adornment-password"
+                id="search-field"
                 type={"text"}
                 autoComplete="off"
                 fullWidth
-                placeholder="Search (Ctrl + Q)"
+                placeholder={`${t("search:placeholder")}... (${t(
+                  "search:shortcut"
+                )})`}
                 {...register("query")}
                 endAdornment={
                   <IconButton

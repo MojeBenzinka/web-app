@@ -17,7 +17,9 @@ const LocationLayer: React.FC = () => {
   const map = useMap();
 
   const move = () => {
-    map.panTo([latitude, longitude]);
+    // map.panTo([latitude, longitude]);
+    // map.setZoom(14);
+    map.setView([latitude, longitude], 14, { animate: true });
   };
 
   if (error || !latitude || !longitude)
@@ -29,11 +31,7 @@ const LocationLayer: React.FC = () => {
         alignItems={"center"}
       >
         <Box className="zoom-control" sx={{ mb: 2 }}>
-          <ButtonGroup
-            orientation="vertical"
-            aria-label="vertical contained button group"
-            variant="contained"
-          >
+          <ButtonGroup orientation="vertical" aria-label="" variant="contained">
             <Button onClick={() => map.zoomIn()}>
               <ZoomInIcon />
             </Button>

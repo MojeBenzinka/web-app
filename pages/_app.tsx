@@ -9,11 +9,16 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import { RecoilRoot } from "recoil";
 import useMediaQuery from "@mui/material/useMediaQuery";
 import { SnackbarProvider } from "notistack";
+import { useRouter } from "next/router";
+import { initTranslations } from "../src/i18n/i18n";
 
 const queryClient = new QueryClient();
 
 const MyApp = ({ Component, pageProps }: AppProps) => {
   const prefersDarkMode = useMediaQuery("(prefers-color-scheme: dark)");
+
+  const router = useRouter();
+  initTranslations(router.locale ?? "cs");
 
   return (
     <>
