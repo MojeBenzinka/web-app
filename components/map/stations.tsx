@@ -1,4 +1,4 @@
-import { Paper, Typography } from "@mui/material";
+import { IconButton, Paper, Typography } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Fade from "@mui/material/Fade";
 import LinearProgress from "@mui/material/LinearProgress";
@@ -11,6 +11,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import selectedCompanies from "../../src/atoms/selected-companies";
 import selectedStation from "../../src/atoms/selected-station";
 import { Station, useStationsQuery } from "../../src/gql/types";
+import RefreshIcon from "@mui/icons-material/Refresh";
 
 const canShowS = (zLevel: number) => zLevel >= 12;
 
@@ -29,7 +30,7 @@ const Stations: React.FC = () => {
 
   // let timer: NodeJS.Timeout = setTimeout(() => {}, 1500);
 
-  const { data, loading, previousData } = useStationsQuery({
+  const { data, loading, previousData, refetch } = useStationsQuery({
     variables: {
       companyIds,
       // lat: map?.getCenter()?.lat,
@@ -138,6 +139,15 @@ const Stations: React.FC = () => {
           </Paper>
         </Box>
       </Fade>
+      <div className="refresh-btn">
+        <IconButton
+          onClick={() => refetch()}
+          color="primary"
+          disabled={loading}
+        >
+          <RefreshIcon />
+        </IconButton>
+      </div>
       {canShowStations &&
         visibleMarkers.map((station) => (
           <StationMarker station={station as Station} key={station?.id} />

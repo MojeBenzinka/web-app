@@ -61,3 +61,10 @@ code {
 .snacks {
   z-index: 5000;
 }
+
+.refresh-btn {
+  position: absolute;
+  left: 20px;
+  bottom: 20px;
+  z-index: 1500;
+}

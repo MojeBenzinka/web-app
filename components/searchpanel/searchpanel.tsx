@@ -21,8 +21,6 @@ import CompanyFilter from "../map/company-select";
 import Box from "@mui/system/Box";
 import { useTranslation } from "react-i18next";
 
-const ariaLabel = { "aria-label": "Search Field" };
-
 export interface ISearchResult {
   place_id: number;
   licence: string;
