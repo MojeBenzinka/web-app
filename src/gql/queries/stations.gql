@@ -45,3 +45,26 @@ query Station($stationId: ID!) {
     }
   }
 }
+
+query CurrentPrices($stationId: ID!) {
+  station(id: $stationId) {
+    id
+    prices {
+      id
+      createdAt
+      updatedAt
+      currency
+      price
+      type {
+        id
+        name
+        description
+        superType {
+          cat
+          name
+          id
+        }
+      }
+    }
+  }
+}

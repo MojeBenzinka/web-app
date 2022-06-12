@@ -25,9 +25,20 @@ const cs = {
   prices: {
     title: "Historie cen",
     noData: "Žádná data",
+    update: {
+      title: "Aktualizovat",
+      toEdit: "Pro úpravu podržte Ctrl a klikněte na cenu",
+      current: "Aktuální cena",
+      description: "Zadejte aktuální cenu pro {{title}}",
+      submit: "Uložit",
+      cancel: "Zrušit",
+      success: "Cena byla úspěšně aktualizována",
+      error: "Chyba při aktualizaci ceny",
+    },
   },
   currencies: {
     CZK: "{{price}} Kč",
+    czk: "Kč",
   },
   devtools: {
     stationId: "ID stanice",

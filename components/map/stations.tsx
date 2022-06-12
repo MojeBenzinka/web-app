@@ -17,6 +17,8 @@ const canShowS = (zLevel: number) => zLevel >= 12;
 
 const Stations: React.FC = () => {
   const companyIds = useRecoilValue(selectedCompanies);
+  const [, setSelectedStation] = useRecoilState(selectedStation);
+  const [toOpenId, setToOpenId] = useState<string | null>(null);
   // const [zoomLevel, setZoomLevel] = useState<number>(1);
 
   const map = useMap();
@@ -99,9 +101,28 @@ const Stations: React.FC = () => {
     }
   };
 
+  const handleInitialLoad = () => {
+    // get station from params
+    const params = new URLSearchParams(window.location.search);
+    const stationId = params.get("station");
+    if (stationId) {
+      setToOpenId(stationId);
+    }
+  };
+
+  useEffect(() => {
+    if (!loading && data && !previousData && toOpenId) {
+      const station = data.stations?.find((s) => s.id === toOpenId);
+      if (station) {
+        setSelectedStation(station as Station);
+      }
+    }
+  }, [data, loading]);
+
   useEffect(() => {
     map.addEventListener("moveend", moved);
     map.addEventListener("zoomend", updateZoom);
+    handleInitialLoad();
 
     return () => {
       map.removeEventListener("moveend", moved);

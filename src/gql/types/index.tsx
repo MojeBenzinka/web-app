@@ -23,7 +23,19 @@ export type Company = {
   imgUrl: Scalars['String'];
   logo_img: Scalars['String'];
   name: Scalars['String'];
-  stations?: Maybe<Array<Maybe<Station>>>;
+  stations?: Maybe<Array<Station>>;
+};
+
+export type Mutation = {
+  __typename?: 'Mutation';
+  updatePrice?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type MutationUpdatePriceArgs = {
+  petrolTypeId: Scalars['ID'];
+  price: Scalars['Float'];
+  stationId: Scalars['ID'];
 };
 
 export type PetrolSuperType = {
@@ -38,7 +50,7 @@ export type PetrolType = {
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
   name: Scalars['String'];
-  superType?: Maybe<PetrolSuperType>;
+  superType: PetrolSuperType;
 };
 
 export type Price = {
@@ -47,15 +59,16 @@ export type Price = {
   currency: Scalars['String'];
   id?: Maybe<Scalars['ID']>;
   price: Scalars['Float'];
-  type?: Maybe<PetrolType>;
+  type: PetrolType;
   updatedAt: Scalars['Date'];
 };
 
 export type Query = {
   __typename?: 'Query';
-  companies?: Maybe<Array<Maybe<Company>>>;
-  station?: Maybe<Station>;
-  stations?: Maybe<Array<Maybe<Station>>>;
+  companies?: Maybe<Array<Company>>;
+  petrolTypes?: Maybe<Array<PetrolType>>;
+  station: Station;
+  stations?: Maybe<Array<Station>>;
 };
 
 
@@ -77,16 +90,25 @@ export type Station = {
   company: Company;
   id: Scalars['ID'];
   lat: Scalars['Float'];
-  latestPrice?: Maybe<Array<Maybe<Price>>>;
   lon: Scalars['Float'];
-  prices?: Maybe<Array<Maybe<Price>>>;
-  pricesHistory?: Maybe<Array<Maybe<Array<Maybe<Price>>>>>;
+  petrolTypes?: Maybe<Array<PetrolType>>;
+  prices?: Maybe<Array<Price>>;
+  pricesHistory?: Maybe<Array<Maybe<Array<Price>>>>;
 };
+
+export type UpdatePriceMutationVariables = Exact<{
+  stationId: Scalars['ID'];
+  petrolTypeId: Scalars['ID'];
+  price: Scalars['Float'];
+}>;
+
+
+export type UpdatePriceMutation = { __typename?: 'Mutation', updatePrice?: boolean | null };
 
 export type CompanyNamesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type CompanyNamesQuery = { __typename?: 'Query', companies?: Array<{ __typename?: 'Company', id: string, name: string, logo_img: string } | null> | null };
+export type CompanyNamesQuery = { __typename?: 'Query', companies?: Array<{ __typename?: 'Company', id: string, name: string, logo_img: string }> | null };
 
 export type StationsQueryVariables = Exact<{
   companyIds?: InputMaybe<Array<InputMaybe<Scalars['String']>> | InputMaybe<Scalars['String']>>;
@@ -97,16 +119,56 @@ export type StationsQueryVariables = Exact<{
 }>;
 
 
-export type StationsQuery = { __typename?: 'Query', stations?: Array<{ __typename?: 'Station', id: string, lat: number, lon: number, company: { __typename?: 'Company', id: string, name: string, logo_img: string } } | null> | null };
+export type StationsQuery = { __typename?: 'Query', stations?: Array<{ __typename?: 'Station', id: string, lat: number, lon: number, company: { __typename?: 'Company', id: string, name: string, logo_img: string } }> | null };
 
 export type StationQueryVariables = Exact<{
   stationId: Scalars['ID'];
 }>;
 
 
-export type StationQuery = { __typename?: 'Query', station?: { __typename?: 'Station', id: string, pricesHistory?: Array<Array<{ __typename?: 'Price', id?: string | null, createdAt: any, updatedAt: any, currency: string, price: number, type?: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType?: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } | null } | null } | null> | null> | null } | null };
+export type StationQuery = { __typename?: 'Query', station: { __typename?: 'Station', id: string, pricesHistory?: Array<Array<{ __typename?: 'Price', id?: string | null, createdAt: any, updatedAt: any, currency: string, price: number, type: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } } }> | null> | null } };
+
+export type CurrentPricesQueryVariables = Exact<{
+  stationId: Scalars['ID'];
+}>;
 
 
+export type CurrentPricesQuery = { __typename?: 'Query', station: { __typename?: 'Station', id: string, prices?: Array<{ __typename?: 'Price', id?: string | null, createdAt: any, updatedAt: any, currency: string, price: number, type: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } } }> | null } };
+
+
+export const UpdatePriceDocument = gql`
+    mutation UpdatePrice($stationId: ID!, $petrolTypeId: ID!, $price: Float!) {
+  updatePrice(stationId: $stationId, petrolTypeId: $petrolTypeId, price: $price)
+}
+    `;
+export type UpdatePriceMutationFn = Apollo.MutationFunction<UpdatePriceMutation, UpdatePriceMutationVariables>;
+
+/**
+ * __useUpdatePriceMutation__
+ *
+ * To run a mutation, you first call `useUpdatePriceMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdatePriceMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updatePriceMutation, { data, loading, error }] = useUpdatePriceMutation({
+ *   variables: {
+ *      stationId: // value for 'stationId'
+ *      petrolTypeId: // value for 'petrolTypeId'
+ *      price: // value for 'price'
+ *   },
+ * });
+ */
+export function useUpdatePriceMutation(baseOptions?: Apollo.MutationHookOptions<UpdatePriceMutation, UpdatePriceMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UpdatePriceMutation, UpdatePriceMutationVariables>(UpdatePriceDocument, options);
+      }
+export type UpdatePriceMutationHookResult = ReturnType<typeof useUpdatePriceMutation>;
+export type UpdatePriceMutationResult = Apollo.MutationResult<UpdatePriceMutation>;
+export type UpdatePriceMutationOptions = Apollo.BaseMutationOptions<UpdatePriceMutation, UpdatePriceMutationVariables>;
 export const CompanyNamesDocument = gql`
     query CompanyNames {
   companies {
@@ -247,3 +309,55 @@ export function useStationLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<St
 export type StationQueryHookResult = ReturnType<typeof useStationQuery>;
 export type StationLazyQueryHookResult = ReturnType<typeof useStationLazyQuery>;
 export type StationQueryResult = Apollo.QueryResult<StationQuery, StationQueryVariables>;
+export const CurrentPricesDocument = gql`
+    query CurrentPrices($stationId: ID!) {
+  station(id: $stationId) {
+    id
+    prices {
+      id
+      createdAt
+      updatedAt
+      currency
+      price
+      type {
+        id
+        name
+        description
+        superType {
+          cat
+          name
+          id
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useCurrentPricesQuery__
+ *
+ * To run a query within a React component, call `useCurrentPricesQuery` and pass it any options that fit your needs.
+ * When your component renders, `useCurrentPricesQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useCurrentPricesQuery({
+ *   variables: {
+ *      stationId: // value for 'stationId'
+ *   },
+ * });
+ */
+export function useCurrentPricesQuery(baseOptions: Apollo.QueryHookOptions<CurrentPricesQuery, CurrentPricesQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<CurrentPricesQuery, CurrentPricesQueryVariables>(CurrentPricesDocument, options);
+      }
+export function useCurrentPricesLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<CurrentPricesQuery, CurrentPricesQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<CurrentPricesQuery, CurrentPricesQueryVariables>(CurrentPricesDocument, options);
+        }
+export type CurrentPricesQueryHookResult = ReturnType<typeof useCurrentPricesQuery>;
+export type CurrentPricesLazyQueryHookResult = ReturnType<typeof useCurrentPricesLazyQuery>;
+export type CurrentPricesQueryResult = Apollo.QueryResult<CurrentPricesQuery, CurrentPricesQueryVariables>;

@@ -11,6 +11,7 @@ import PriceChart from "./price-chart";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useClipboard } from "use-clipboard-copy";
 import { useSnackbar } from "notistack";
+import PriceDisplay from "./price-display";
 
 const InfoPanel: React.FC = () => {
   const [selected, setSelected] = useRecoilState(selectedStation);
@@ -26,6 +27,25 @@ const InfoPanel: React.FC = () => {
     });
   };
 
+  const handleChangeSelected = () => {
+    if (selected) {
+      const id = selected.id;
+      // add to query params
+      const url = new URL(window.location.href);
+      url.searchParams.set("station", id);
+      window.history.pushState({}, "", url.toString());
+    } else {
+      // remove from query params
+      const url = new URL(window.location.href);
+      url.searchParams.delete("station");
+      window.history.pushState({}, "", url.toString());
+    }
+  };
+
+  useEffect(() => {
+    handleChangeSelected();
+  }, [selected]);
+
   return (
     <div>
       <Drawer
@@ -40,15 +60,18 @@ const InfoPanel: React.FC = () => {
         anchor="right"
         open={!!selected}
       >
-        <Box sx={{ padding: 2 }}>
+        <Box sx={{ paddingX: 2 }}>
           <Grid
             container
+            sx={{ paddingY: 2 }}
             direction="row"
             justifyContent="space-between"
             alignItems="center"
           >
             <Grid item>
-              <Typography variant="h3">{selected?.company?.name}</Typography>
+              <Typography variant="h4" component="h2">
+                {selected?.company?.name}
+              </Typography>
             </Grid>
             <Grid item>
               <IconButton onClick={() => setSelected(null)}>
@@ -56,6 +79,9 @@ const InfoPanel: React.FC = () => {
               </IconButton>
             </Grid>
           </Grid>
+          <Box sx={{ marginBottom: 2 }}>
+            {selected && <PriceDisplay stationId={selected.id} />}
+          </Box>
           {selected && <PriceChart stationId={selected.id} />}
           <Box sx={{ marginTop: 3 }}>
             Station ID:

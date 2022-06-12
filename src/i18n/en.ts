@@ -25,9 +25,20 @@ const en = {
   prices: {
     title: "Prices history",
     noData: "No data",
+    update: {
+      title: "Update",
+      toEdit: "To edit hold Ctrl and click the price",
+      current: "Current price",
+      description: "Enter current price for {{title}}",
+      submit: "Save",
+      cancel: "Cancel",
+      success: "Price was successfully updated",
+      error: "Error updating price",
+    },
   },
   currencies: {
     CZK: "CZK {{price}}",
+    czk: "CZK",
   },
   devtools: {
     stationId: "Station ID",

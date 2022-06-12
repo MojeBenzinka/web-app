@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { CircleMarker, Popup, useMap } from "react-leaflet";
 import useGeolocation from "react-hook-geolocation";
 import Fab from "@mui/material/Fab";
@@ -10,11 +10,65 @@ import Button from "@mui/material/Button";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
 
+const gpsTimeout = 300;
+
 const LocationLayer: React.FC = () => {
   const { latitude, longitude, timestamp, accuracy, error, heading } =
     useGeolocation({ enableHighAccuracy: true });
 
+  let timer: NodeJS.Timeout = setTimeout(() => {}, gpsTimeout);
+
   const map = useMap();
+
+  const onMove = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+
+    timer = setTimeout(() => {
+      handleMoveCoords();
+    }, gpsTimeout);
+  };
+
+  const handleMoveCoords = () => {
+    // lat, lon
+    const center = map.getCenter();
+    const zoom = map.getZoom();
+    const lat = center.lat;
+    const lon = center.lng;
+
+    // add to query params
+    const url = new URL(window.location.href);
+    url.searchParams.set("lat", lat.toString());
+    url.searchParams.set("lon", lon.toString());
+    url.searchParams.set("zoom", zoom.toString());
+    window.history.replaceState({}, "", url.toString());
+    // window.history.pushState({}, "", `?lat=${lat}&lon=${lon}&zoom=${zoom}`);
+  };
+
+  const handleInitialParams = () => {
+    const params = new URLSearchParams(window.location.search);
+    const lat = params.get("lat");
+    const lon = params.get("lon");
+    const zoom = params.get("zoom");
+    if (lat && lon && zoom) {
+      const parseLat = parseFloat(lat);
+      const parseLon = parseFloat(lon);
+      const parseZoom = parseInt(zoom);
+      if (!isNaN(parseLat) && !isNaN(parseLon) && !isNaN(parseZoom)) {
+        map.setView([parseLat, parseLon], parseZoom);
+      }
+    }
+  };
+
+  useEffect(() => {
+    map.addEventListener("move", onMove);
+    handleInitialParams();
+
+    return () => {
+      map.removeEventListener("move", onMove);
+    };
+  }, []);
 
   const move = () => {
     // map.panTo([latitude, longitude]);
