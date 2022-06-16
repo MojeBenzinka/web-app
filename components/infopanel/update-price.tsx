@@ -21,22 +21,21 @@ import selectedStation from "../../src/atoms/selected-station";
 import { useSnackbar } from "notistack";
 
 interface IProps {
-  onUpdate: () => void;
+  onUpdate: () => Promise<void>;
   close: () => void;
   price: Price | null;
   open: boolean;
 }
 
 interface IUpdateForm {
-  price: number;
+  price: string;
 }
 
 const UpdatePrice: React.FC<IProps> = ({ open, onUpdate, price, close }) => {
   const [update] = useUpdatePriceMutation();
   const selected = useRecoilValue(selectedStation);
 
-  const { register, handleSubmit, watch, reset, setFocus } =
-    useForm<IUpdateForm>();
+  const { register, handleSubmit, reset } = useForm<IUpdateForm>();
 
   const { t } = useTranslation();
 
@@ -49,12 +48,12 @@ const UpdatePrice: React.FC<IProps> = ({ open, onUpdate, price, close }) => {
       variables: {
         stationId: selected.id ?? "",
         petrolTypeId: price?.type?.id ?? "",
-        price: data.price,
+        price: parseFloat(data.price),
       },
     });
 
     if (result.data?.updatePrice) {
-      onUpdate();
+      await onUpdate();
       close();
       enqueueSnackbar(t("prices:update:success"), {
         variant: "success",
@@ -73,7 +72,7 @@ const UpdatePrice: React.FC<IProps> = ({ open, onUpdate, price, close }) => {
   useEffect(() => {
     if (open && price) {
       reset({
-        price: price.price ?? 0,
+        price: price.price?.toFixed(2),
       });
     }
   }, [open, reset, price]);
@@ -97,7 +96,7 @@ const UpdatePrice: React.FC<IProps> = ({ open, onUpdate, price, close }) => {
               })}
             </DialogContentText>
             <form onSubmit={handleSubmit(handleUpdate)}>
-              <FormControl sx={{ m: 1, width: "25ch" }} variant="outlined">
+              <FormControl sx={{ m: 1, my: 2 }} fullWidth variant="outlined">
                 <OutlinedInput
                   {...register("price")}
                   endAdornment={

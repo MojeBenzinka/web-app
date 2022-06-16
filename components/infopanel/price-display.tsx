@@ -1,4 +1,6 @@
 import {
+  CircularProgress,
+  IconButton,
   List,
   ListItem,
   ListItemButton,
@@ -7,15 +9,17 @@ import {
 } from "@mui/material";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Price, useCurrentPricesQuery } from "../../src/gql/types";
+import { Price, Station, useCurrentPricesQuery } from "../../src/gql/types";
 import useCtrlPress from "../../src/hooks/ctrlPress";
 import UpdatePrice from "./update-price";
+import EditIcon from "@mui/icons-material/Edit";
+import CreatePrice from "./create-price";
 
 interface IProps {
   stationId: string;
 }
 const PriceDisplay: React.FC<IProps> = ({ stationId }) => {
-  const { data, loading, error } = useCurrentPricesQuery({
+  const { data, loading, error, refetch } = useCurrentPricesQuery({
     variables: { stationId },
   });
 
@@ -23,18 +27,22 @@ const PriceDisplay: React.FC<IProps> = ({ stationId }) => {
 
   const { t } = useTranslation();
 
-  const handleClick =
-    (price: Price): React.MouseEventHandler<HTMLDivElement> =>
-    (event) => {
-      if (!event.ctrlKey) return;
+  const handleClick = (price: Price) => {
+    // if (!event.ctrlKey) return;
 
-      setPrice(price);
-      // TODO: Handle edit modal
-    };
+    setPrice(price);
+  };
 
-  const onUpdate = () => {};
+  const onUpdate = async () => {
+    await refetch({ stationId });
+  };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading)
+    return (
+      <div>
+        <CircularProgress />
+      </div>
+    );
   if (error) return <div>Error</div>;
 
   const prices = data?.station?.prices ?? [];
@@ -43,8 +51,21 @@ const PriceDisplay: React.FC<IProps> = ({ stationId }) => {
     <>
       <List dense>
         {prices.map((price) => (
-          <ListItem key={price.id}>
-            <ListItemButton onClick={handleClick(price)}>
+          <ListItem
+            key={price.id}
+            secondaryAction={
+              <IconButton
+                edge="end"
+                aria-label="delete"
+                onClick={() => handleClick(price as Price)}
+              >
+                <EditIcon />
+              </IconButton>
+            }
+          >
+            <ListItemButton
+            // onClick={handleClick(price as Price)}
+            >
               <ListItemText
                 secondary={price.type?.name}
                 primary={t(`currencies:${price.currency}`, {
@@ -55,7 +76,10 @@ const PriceDisplay: React.FC<IProps> = ({ stationId }) => {
           </ListItem>
         ))}
       </List>
-      <Typography variant="caption">{t("prices:update:toEdit")}</Typography>
+      <CreatePrice station={data?.station as Station} onUpdate={onUpdate} />
+      {/* {prices.length > 0 && (
+        <Typography variant="caption">{t("prices:update:toEdit")}</Typography>
+      )} */}
       <UpdatePrice
         open={!!price}
         onUpdate={onUpdate}

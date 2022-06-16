@@ -1,0 +1,7 @@
+mutation UpdatePrice($stationId: ID!, $petrolTypeId: ID!, $price: Float!) {
+  updatePrice(stationId: $stationId, petrolTypeId: $petrolTypeId, price: $price)
+}
+
+mutation CreatePrice($stationId: ID!, $petrolTypeId: ID!, $price: Float!) {
+  createPrice(stationId: $stationId, petrolTypeId: $petrolTypeId, price: $price)
+}

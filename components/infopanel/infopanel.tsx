@@ -12,6 +12,7 @@ import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { useClipboard } from "use-clipboard-copy";
 import { useSnackbar } from "notistack";
 import PriceDisplay from "./price-display";
+import { Divider } from "@mui/material";
 
 const InfoPanel: React.FC = () => {
   const [selected, setSelected] = useRecoilState(selectedStation);
@@ -69,7 +70,17 @@ const InfoPanel: React.FC = () => {
             alignItems="center"
           >
             <Grid item>
-              <Typography variant="h4" component="h2">
+              <img
+                src={`/stations/${selected?.company?.logo_img}`}
+                height={120}
+              />
+            </Grid>
+            <Grid item>
+              <Typography
+                variant="h4"
+                component="h2"
+                sx={{ whiteSpace: "normal" }}
+              >
                 {selected?.company?.name}
               </Typography>
             </Grid>
@@ -79,11 +90,14 @@ const InfoPanel: React.FC = () => {
               </IconButton>
             </Grid>
           </Grid>
+          <Divider />
           <Box sx={{ marginBottom: 2 }}>
             {selected && <PriceDisplay stationId={selected.id} />}
           </Box>
+          <Divider sx={{ marginBottom: 2 }} />
           {selected && <PriceChart stationId={selected.id} />}
-          <Box sx={{ marginTop: 3 }}>
+          <Divider sx={{ marginTop: 2 }} />
+          <Box sx={{ marginTop: 3, fontSize: 12 }}>
             Station ID:
             <br />
             <code>{selected?.id}</code>
@@ -91,7 +105,7 @@ const InfoPanel: React.FC = () => {
               <ContentCopyIcon />
             </IconButton>
           </Box>
-          <Box sx={{ marginTop: 3 }}>
+          <Box sx={{ marginTop: 3, fontSize: 12 }}>
             Company ID:
             <br />
             <code>{selected?.company?.id}</code>

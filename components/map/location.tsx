@@ -1,5 +1,5 @@
-import React, { useEffect } from "react";
-import { CircleMarker, Popup, useMap } from "react-leaflet";
+import React, { useEffect, useState } from "react";
+import { CircleMarker, Marker, Popup, useMap } from "react-leaflet";
 import useGeolocation from "react-hook-geolocation";
 import Fab from "@mui/material/Fab";
 import MyLocationIcon from "@mui/icons-material/MyLocation";
@@ -9,12 +9,17 @@ import ButtonGroup from "@mui/material/ButtonGroup";
 import Button from "@mui/material/Button";
 import ZoomInIcon from "@mui/icons-material/ZoomIn";
 import ZoomOutIcon from "@mui/icons-material/ZoomOut";
+import { isPointInPolygon } from "geolib";
+import { DivIcon } from "leaflet";
 
 const gpsTimeout = 300;
 
 const LocationLayer: React.FC = () => {
-  const { latitude, longitude, timestamp, accuracy, error, heading } =
-    useGeolocation({ enableHighAccuracy: true });
+  const { latitude, longitude, accuracy, error, heading } = useGeolocation({
+    enableHighAccuracy: true,
+  });
+
+  const [canMove, setCanMove] = useState(true);
 
   let timer: NodeJS.Timeout = setTimeout(() => {}, gpsTimeout);
 
@@ -57,9 +62,30 @@ const LocationLayer: React.FC = () => {
       const parseZoom = parseInt(zoom);
       if (!isNaN(parseLat) && !isNaN(parseLon) && !isNaN(parseZoom)) {
         map.setView([parseLat, parseLon], parseZoom);
+        setCanMove(false);
       }
     }
   };
+
+  const czechRepublicPolygon = [
+    { latitude: 51.03395176501104, longitude: 11.78869826893885 },
+    { latitude: 48.490458301949154, longitude: 12.017550002607448 },
+    { latitude: 48.60112138856494, longitude: 18.774986713965326 },
+    { latitude: 50.97901824709889, longitude: 19.06525467181402 },
+  ];
+
+  const moveMap = () => {
+    if (latitude && longitude) {
+      if (isPointInPolygon({ latitude, longitude }, czechRepublicPolygon)) {
+        map.setView([latitude, longitude], 13);
+        setCanMove(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (canMove) moveMap();
+  }, [latitude, longitude, canMove]);
 
   useEffect(() => {
     map.addEventListener("move", onMove);
@@ -124,7 +150,16 @@ const LocationLayer: React.FC = () => {
           <MyLocationIcon />
         </Fab>
       </Box>
-      <CircleMarker
+      <Marker
+        position={[latitude, longitude]}
+        icon={
+          new DivIcon({
+            html: `<div class="user-location"></div>`,
+            className: "",
+          })
+        }
+      />
+      {/* <CircleMarker
         center={[latitude, longitude]}
         className="transition"
         radius={2}
@@ -138,7 +173,7 @@ const LocationLayer: React.FC = () => {
           <br />
           <span>accuracy: {accuracy}</span>
         </Popup>
-      </CircleMarker>
+      </CircleMarker> */}
     </>
   );
 };

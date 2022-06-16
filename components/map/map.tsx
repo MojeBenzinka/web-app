@@ -1,5 +1,5 @@
 import React from "react";
-import { MapContainer, TileLayer, useMap } from "react-leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import Stations from "./stations";
 import LocationLayer from "./location";
@@ -10,7 +10,7 @@ import useLagRadar from "./uselagradar";
 const czechRepublicCenter: [number, number] = [50.08, 14.43];
 
 const Map: React.FC = () => {
-  useLagRadar();
+  // useLagRadar();
 
   return (
     <MapContainer

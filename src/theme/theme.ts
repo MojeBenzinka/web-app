@@ -14,7 +14,7 @@ const theme = (dark: boolean) =>
     palette: {
       mode: dark ? "dark" : "light",
       primary: {
-        main: purple[500],
+        main: "#e00000",
       },
       secondary: {
         main: green[500],

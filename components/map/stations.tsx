@@ -1,9 +1,8 @@
 import { IconButton, Paper, Typography } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Fade from "@mui/material/Fade";
-import LinearProgress from "@mui/material/LinearProgress";
 import Box from "@mui/system/Box";
-import { DivIcon, Icon, LeafletEvent } from "leaflet";
+import { Icon } from "leaflet";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Marker, useMap } from "react-leaflet";
@@ -19,6 +18,7 @@ const Stations: React.FC = () => {
   const companyIds = useRecoilValue(selectedCompanies);
   const [, setSelectedStation] = useRecoilState(selectedStation);
   const [toOpenId, setToOpenId] = useState<string | null>(null);
+
   // const [zoomLevel, setZoomLevel] = useState<number>(1);
 
   const map = useMap();
@@ -101,28 +101,31 @@ const Stations: React.FC = () => {
     }
   };
 
-  const handleInitialLoad = () => {
-    // get station from params
-    const params = new URLSearchParams(window.location.search);
-    const stationId = params.get("station");
+  const checkStations = () => {
+    const stationId = new URLSearchParams(window.location.search).get(
+      "station"
+    );
     if (stationId) {
       setToOpenId(stationId);
     }
   };
 
   useEffect(() => {
-    if (!loading && data && !previousData && toOpenId) {
+    if (data && !loading && !previousData && toOpenId) {
       const station = data.stations?.find((s) => s.id === toOpenId);
+      console.log(station);
       if (station) {
         setSelectedStation(station as Station);
       }
     }
-  }, [data, loading]);
+  }, [data, loading, previousData, toOpenId]);
 
   useEffect(() => {
-    map.addEventListener("moveend", moved);
-    map.addEventListener("zoomend", updateZoom);
-    handleInitialLoad();
+    checkStations();
+    setTimeout(() => {
+      map.addEventListener("moveend", moved);
+      map.addEventListener("zoomend", updateZoom);
+    }, 1500);
 
     return () => {
       map.removeEventListener("moveend", moved);

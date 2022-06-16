@@ -1,9 +1,15 @@
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
 import moment from "moment";
-import React, { CSSProperties, useMemo } from "react";
+import React, { useMemo } from "react";
 import { AxisOptions, Chart, UserSerie } from "react-charts";
-import { Price, useStationQuery } from "../../src/gql/types";
+import { useStationQuery } from "../../src/gql/types";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import Typography from "@mui/material/Typography";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import { useTranslation } from "react-i18next";
 
 interface Data {
   primary: Date;
@@ -49,13 +55,37 @@ const PriceChart: React.FC<IProps> = ({ stationId }) => {
 
     const pricesGroupped: UserSerie<Data>[] = prices
       .filter((p) => p != null && p.length > 0)
-      .map((p) => ({
-        label: p?.[0]?.type?.name ?? "",
-        data: p!.map((price) => ({
-          primary: new Date(price?.createdAt),
-          secondary: price?.price ?? 0,
-        })),
-      }));
+      .map((p) => {
+        const data = p!.map((price) =>
+          price?.validTo && price?.validTo == price?.validFrom
+            ? [
+                {
+                  primary: new Date(price?.validFrom),
+                  secondary: price?.price ?? 0,
+                },
+                {
+                  primary: new Date(price?.validTo),
+                  secondary: price?.price ?? 0,
+                },
+              ]
+            : [
+                {
+                  primary: new Date(price?.validFrom),
+                  secondary: price?.price ?? 0,
+                },
+              ]
+        );
+
+        // make into one array
+        const d = data.reduce((acc, cur) => {
+          return acc.concat(cur);
+        }, [] as Data[]);
+
+        return {
+          label: p?.[0]?.type?.name ?? "",
+          data: d,
+        };
+      });
 
     // for (const p of prices) {
     //   if (!p) continue;
@@ -101,8 +131,8 @@ const PriceChart: React.FC<IProps> = ({ stationId }) => {
   >(
     () => [
       {
-        max: 60,
-        min: 20,
+        max: 50,
+        min: 40,
         scaleType: "linear",
         getValue: (datum) => datum.secondary,
         formatters: {
@@ -114,6 +144,8 @@ const PriceChart: React.FC<IProps> = ({ stationId }) => {
     ],
     []
   );
+
+  const { t } = useTranslation();
 
   if (loading) {
     return <div>Loading...</div>;
@@ -129,16 +161,23 @@ const PriceChart: React.FC<IProps> = ({ stationId }) => {
 
   return (
     <>
-      <Box sx={{ minHeight: 300 }}>
-        <Chart
-          options={{
-            data: datatata,
-            primaryAxis,
-            secondaryAxes,
-            dark: theme.palette.mode === "dark",
-          }}
-        />
-      </Box>
+      <Accordion>
+        <AccordionSummary expandIcon={<ExpandMoreIcon />} id="panel1a-header">
+          <Typography>{t("prices:history:title")}</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Box sx={{ minHeight: 300, marginBottom: 3 }}>
+            <Chart
+              options={{
+                data: datatata,
+                primaryAxis,
+                secondaryAxes,
+                dark: theme.palette.mode === "dark",
+              }}
+            />
+          </Box>
+        </AccordionDetails>
+      </Accordion>
     </>
   );
 };

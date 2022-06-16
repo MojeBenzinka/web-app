@@ -18,13 +18,19 @@ const cs = {
     noResults: "Žádné výsledky",
     filterOptions: {
       companies: "Společnosti",
+      search: "Hledat",
+      searchDesc: "Zadejte alespoň 3 znaky",
       save: "Uložit",
+      invert: "Invertovat výběr",
       cancel: "Zrušit",
     },
   },
   prices: {
     title: "Historie cen",
     noData: "Žádná data",
+    history: {
+      title: "Vývoj cen",
+    },
     update: {
       title: "Aktualizovat",
       toEdit: "Pro úpravu podržte Ctrl a klikněte na cenu",
@@ -35,6 +41,25 @@ const cs = {
       success: "Cena byla úspěšně aktualizována",
       error: "Chyba při aktualizaci ceny",
     },
+    create: {
+      success: "Cena byla úspěšně vytvořena",
+      error: "Chyba při vytváření ceny",
+      title: "Vytvořit cenu",
+      button: "Vytvořit cenu",
+      description: "Vyberte typ paliva a zadejte aktuální cenu k dnešnímu dni",
+      type: "Typ paliva",
+      submit: "Uložit",
+      cancel: "Zrušit",
+    },
+  },
+  fuelSuperTypes: {
+    cng: "CNG",
+    lpg: "LPG",
+    diesel: "Diesel",
+    gas: "Benzín {{type}}",
+    adblue: "AdBlue",
+    hydrogen: "Vodík",
+    electricity: "Elektřina",
   },
   currencies: {
     CZK: "{{price}} Kč",

@@ -18,13 +18,19 @@ const en = {
     noResults: "No results",
     filterOptions: {
       companies: "Companies",
+      search: "Search",
+      searchDesc: "Enter at least 3 characters",
       save: "Save",
+      invert: "Invert selection",
       cancel: "Cancel",
     },
   },
   prices: {
     title: "Prices history",
     noData: "No data",
+    history: {
+      title: "Prices history",
+    },
     update: {
       title: "Update",
       toEdit: "To edit hold Ctrl and click the price",
@@ -35,6 +41,25 @@ const en = {
       success: "Price was successfully updated",
       error: "Error updating price",
     },
+    create: {
+      success: "Price was successfully created",
+      error: "Error creating price",
+      title: "Create price",
+      button: "Create price",
+      description: "Select fuel type and enter current price for today",
+      type: "Fuel type",
+      submit: "Save",
+      cancel: "Cancel",
+    },
+  },
+  fuelSuperTypes: {
+    cng: "CNG",
+    lpg: "LPG",
+    diesel: "Diesel",
+    gas: "Gas {{type}}",
+    adblue: "AdBlue",
+    hydrogen: "Hydrogen",
+    electricity: "Electricity",
   },
   currencies: {
     CZK: "CZK {{price}}",

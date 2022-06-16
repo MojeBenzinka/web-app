@@ -1,3 +1,0 @@
-mutation UpdatePrice($stationId: ID!, $petrolTypeId: ID!, $price: Float!) {
-  updatePrice(stationId: $stationId, petrolTypeId: $petrolTypeId, price: $price)
-}

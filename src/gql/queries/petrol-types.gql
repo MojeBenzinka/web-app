@@ -1,0 +1,12 @@
+query PetrolTypes {
+  petrolTypes {
+    id
+    name
+    description
+    superType {
+      id
+      name
+      cat
+    }
+  }
+}

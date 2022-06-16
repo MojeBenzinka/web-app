@@ -28,10 +28,10 @@ query Station($stationId: ID!) {
     id
     pricesHistory {
       id
-      createdAt
-      updatedAt
       currency
       price
+      validFrom
+      validTo
       type {
         id
         name
@@ -51,10 +51,10 @@ query CurrentPrices($stationId: ID!) {
     id
     prices {
       id
-      createdAt
-      updatedAt
       currency
       price
+      validFrom
+      validTo
       type {
         id
         name
