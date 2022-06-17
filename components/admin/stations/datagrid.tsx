@@ -1,8 +1,14 @@
-import React from "react";
-import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
+import React, { useState } from "react";
+import {
+  DataGrid,
+  GridColDef,
+  GridEventListener,
+  GridValueGetterParams,
+} from "@mui/x-data-grid";
 import { Station, useStationsQuery } from "../../../src/gql/types";
 import Box from "@mui/material/Box";
-import { Container, Paper } from "@mui/material";
+import { CircularProgress, Container, Paper } from "@mui/material";
+import CompanyPetrolModal from "./company-modal";
 
 const columns: GridColDef<Station>[] = [
   { field: "id", headerName: "ID", width: 150 },
@@ -38,21 +44,44 @@ const columns: GridColDef<Station>[] = [
 const StationsDatagrid: React.FC = () => {
   const { data, loading, error } = useStationsQuery();
 
-  if (loading) return <div>Loading...</div>;
+  const [selectedStation, setSelectedStation] = useState<Station | null>(null);
+
+  const handleClick: GridEventListener<"cellClick"> = (cell) => {
+    if (cell.field === "company_id") {
+      // console.log(cell);
+      setSelectedStation(cell.row as Station);
+    }
+  };
+
+  if (loading)
+    return (
+      <Container sx={{ py: 2 }}>
+        <CircularProgress />
+      </Container>
+    );
   if (error) return <div>Error!</div>;
   if (!data || !data.stations) return <div>No data</div>;
 
   return (
     <>
-      <Container>
+      <Container sx={{ py: 2 }}>
         <Paper sx={{ height: "80vh" }}>
           <DataGrid
             rows={data.stations as Station[]}
             columns={columns}
-            pageSize={50}
-            rowsPerPageOptions={[5]}
+            // pageSize={50}
+            rowsPerPageOptions={[50, 100, 150, 200]}
+            onCellDoubleClick={handleClick}
           />
         </Paper>
+
+        <Box sx={{ mt: 2 }}>
+          {selectedStation && (
+            <Paper sx={{ p: 2 }}>
+              <CompanyPetrolModal station={selectedStation} />
+            </Paper>
+          )}
+        </Box>
       </Container>
     </>
   );

@@ -4,6 +4,7 @@ import {
   Station,
   useCreatePriceMutation,
   usePetrolTypesQuery,
+  useStationAvailablePetrolsQuery,
 } from "../../src/gql/types";
 import TextField from "@mui/material/TextField";
 import Dialog from "@mui/material/Dialog";
@@ -45,7 +46,11 @@ const CreatePrice: React.FC<IProps> = ({ onUpdate, station }) => {
   const selected = useRecoilValue(selectedStation);
   const [open, setOpen] = useState(false);
 
-  const { data, loading, error } = usePetrolTypesQuery();
+  const { data, loading, error } = useStationAvailablePetrolsQuery({
+    variables: { stationId: station.id },
+  });
+
+  // const { data, loading, error } = usePetrolTypesQuery();
 
   const { register, handleSubmit, reset } = useForm<IUpdateForm>();
 
@@ -96,6 +101,8 @@ const CreatePrice: React.FC<IProps> = ({ onUpdate, station }) => {
 
   if (loading) return <div>Loading</div>;
 
+  if (error || !data || !data.station) return <div>Error</div>;
+
   return (
     <>
       <Button onClick={() => setOpen(true)}>{t("prices:create:button")}</Button>
@@ -130,7 +137,7 @@ const CreatePrice: React.FC<IProps> = ({ onUpdate, station }) => {
                     label={t("prices:create:type")}
                     {...register("fuelType")}
                   >
-                    {data?.petrolTypes?.map((type) => (
+                    {data.station.company.availablePetrols?.map((type) => (
                       <MenuItem key={type.id} value={type.id}>
                         <Box sx={{ display: "flex", flexDirection: "column" }}>
                           <Typography variant="body1">{type.name}</Typography>

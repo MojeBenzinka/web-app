@@ -19,6 +19,7 @@ export type Scalars = {
 
 export type Company = {
   __typename?: 'Company';
+  availablePetrols?: Maybe<Array<PetrolType>>;
   id: Scalars['ID'];
   imgUrl: Scalars['String'];
   logo_img: Scalars['String'];
@@ -28,8 +29,16 @@ export type Company = {
 
 export type Mutation = {
   __typename?: 'Mutation';
+  addPetrolToCompany: Scalars['Boolean'];
   createPrice: Scalars['Boolean'];
+  removePetrolFromCompany: Scalars['Boolean'];
   updatePrice: Scalars['Boolean'];
+};
+
+
+export type MutationAddPetrolToCompanyArgs = {
+  companyId: Scalars['ID'];
+  petrolTypeId: Scalars['ID'];
 };
 
 
@@ -37,6 +46,12 @@ export type MutationCreatePriceArgs = {
   petrolTypeId: Scalars['ID'];
   price: Scalars['Float'];
   stationId: Scalars['ID'];
+};
+
+
+export type MutationRemovePetrolFromCompanyArgs = {
+  companyId: Scalars['ID'];
+  petrolTypeId: Scalars['ID'];
 };
 
 
@@ -124,6 +139,22 @@ export type CreatePriceMutationVariables = Exact<{
 
 export type CreatePriceMutation = { __typename?: 'Mutation', createPrice: boolean };
 
+export type AddFuelToCompanyMutationVariables = Exact<{
+  companyId: Scalars['ID'];
+  petrolTypeId: Scalars['ID'];
+}>;
+
+
+export type AddFuelToCompanyMutation = { __typename?: 'Mutation', addPetrolToCompany: boolean };
+
+export type RemoveFuelFromCompanyMutationVariables = Exact<{
+  companyId: Scalars['ID'];
+  petrolTypeId: Scalars['ID'];
+}>;
+
+
+export type RemoveFuelFromCompanyMutation = { __typename?: 'Mutation', removePetrolFromCompany: boolean };
+
 export type CompanyNamesQueryVariables = Exact<{ [key: string]: never; }>;
 
 
@@ -158,6 +189,13 @@ export type CurrentPricesQueryVariables = Exact<{
 
 
 export type CurrentPricesQuery = { __typename?: 'Query', station: { __typename?: 'Station', id: string, prices?: Array<{ __typename?: 'Price', id: string, currency: string, price: number, validFrom: any, validTo?: any | null, type: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } } }> | null } };
+
+export type StationAvailablePetrolsQueryVariables = Exact<{
+  stationId: Scalars['ID'];
+}>;
+
+
+export type StationAvailablePetrolsQuery = { __typename?: 'Query', station: { __typename?: 'Station', id: string, company: { __typename?: 'Company', id: string, availablePetrols?: Array<{ __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', id: string, name: string, cat: string } }> | null } } };
 
 
 export const UpdatePriceDocument = gql`
@@ -226,6 +264,70 @@ export function useCreatePriceMutation(baseOptions?: Apollo.MutationHookOptions<
 export type CreatePriceMutationHookResult = ReturnType<typeof useCreatePriceMutation>;
 export type CreatePriceMutationResult = Apollo.MutationResult<CreatePriceMutation>;
 export type CreatePriceMutationOptions = Apollo.BaseMutationOptions<CreatePriceMutation, CreatePriceMutationVariables>;
+export const AddFuelToCompanyDocument = gql`
+    mutation AddFuelToCompany($companyId: ID!, $petrolTypeId: ID!) {
+  addPetrolToCompany(companyId: $companyId, petrolTypeId: $petrolTypeId)
+}
+    `;
+export type AddFuelToCompanyMutationFn = Apollo.MutationFunction<AddFuelToCompanyMutation, AddFuelToCompanyMutationVariables>;
+
+/**
+ * __useAddFuelToCompanyMutation__
+ *
+ * To run a mutation, you first call `useAddFuelToCompanyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddFuelToCompanyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addFuelToCompanyMutation, { data, loading, error }] = useAddFuelToCompanyMutation({
+ *   variables: {
+ *      companyId: // value for 'companyId'
+ *      petrolTypeId: // value for 'petrolTypeId'
+ *   },
+ * });
+ */
+export function useAddFuelToCompanyMutation(baseOptions?: Apollo.MutationHookOptions<AddFuelToCompanyMutation, AddFuelToCompanyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddFuelToCompanyMutation, AddFuelToCompanyMutationVariables>(AddFuelToCompanyDocument, options);
+      }
+export type AddFuelToCompanyMutationHookResult = ReturnType<typeof useAddFuelToCompanyMutation>;
+export type AddFuelToCompanyMutationResult = Apollo.MutationResult<AddFuelToCompanyMutation>;
+export type AddFuelToCompanyMutationOptions = Apollo.BaseMutationOptions<AddFuelToCompanyMutation, AddFuelToCompanyMutationVariables>;
+export const RemoveFuelFromCompanyDocument = gql`
+    mutation RemoveFuelFromCompany($companyId: ID!, $petrolTypeId: ID!) {
+  removePetrolFromCompany(companyId: $companyId, petrolTypeId: $petrolTypeId)
+}
+    `;
+export type RemoveFuelFromCompanyMutationFn = Apollo.MutationFunction<RemoveFuelFromCompanyMutation, RemoveFuelFromCompanyMutationVariables>;
+
+/**
+ * __useRemoveFuelFromCompanyMutation__
+ *
+ * To run a mutation, you first call `useRemoveFuelFromCompanyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRemoveFuelFromCompanyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [removeFuelFromCompanyMutation, { data, loading, error }] = useRemoveFuelFromCompanyMutation({
+ *   variables: {
+ *      companyId: // value for 'companyId'
+ *      petrolTypeId: // value for 'petrolTypeId'
+ *   },
+ * });
+ */
+export function useRemoveFuelFromCompanyMutation(baseOptions?: Apollo.MutationHookOptions<RemoveFuelFromCompanyMutation, RemoveFuelFromCompanyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RemoveFuelFromCompanyMutation, RemoveFuelFromCompanyMutationVariables>(RemoveFuelFromCompanyDocument, options);
+      }
+export type RemoveFuelFromCompanyMutationHookResult = ReturnType<typeof useRemoveFuelFromCompanyMutation>;
+export type RemoveFuelFromCompanyMutationResult = Apollo.MutationResult<RemoveFuelFromCompanyMutation>;
+export type RemoveFuelFromCompanyMutationOptions = Apollo.BaseMutationOptions<RemoveFuelFromCompanyMutation, RemoveFuelFromCompanyMutationVariables>;
 export const CompanyNamesDocument = gql`
     query CompanyNames {
   companies {
@@ -459,3 +561,51 @@ export function useCurrentPricesLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type CurrentPricesQueryHookResult = ReturnType<typeof useCurrentPricesQuery>;
 export type CurrentPricesLazyQueryHookResult = ReturnType<typeof useCurrentPricesLazyQuery>;
 export type CurrentPricesQueryResult = Apollo.QueryResult<CurrentPricesQuery, CurrentPricesQueryVariables>;
+export const StationAvailablePetrolsDocument = gql`
+    query StationAvailablePetrols($stationId: ID!) {
+  station(id: $stationId) {
+    id
+    company {
+      id
+      availablePetrols {
+        id
+        name
+        description
+        superType {
+          id
+          name
+          cat
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useStationAvailablePetrolsQuery__
+ *
+ * To run a query within a React component, call `useStationAvailablePetrolsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useStationAvailablePetrolsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useStationAvailablePetrolsQuery({
+ *   variables: {
+ *      stationId: // value for 'stationId'
+ *   },
+ * });
+ */
+export function useStationAvailablePetrolsQuery(baseOptions: Apollo.QueryHookOptions<StationAvailablePetrolsQuery, StationAvailablePetrolsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<StationAvailablePetrolsQuery, StationAvailablePetrolsQueryVariables>(StationAvailablePetrolsDocument, options);
+      }
+export function useStationAvailablePetrolsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<StationAvailablePetrolsQuery, StationAvailablePetrolsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<StationAvailablePetrolsQuery, StationAvailablePetrolsQueryVariables>(StationAvailablePetrolsDocument, options);
+        }
+export type StationAvailablePetrolsQueryHookResult = ReturnType<typeof useStationAvailablePetrolsQuery>;
+export type StationAvailablePetrolsLazyQueryHookResult = ReturnType<typeof useStationAvailablePetrolsLazyQuery>;
+export type StationAvailablePetrolsQueryResult = Apollo.QueryResult<StationAvailablePetrolsQuery, StationAvailablePetrolsQueryVariables>;

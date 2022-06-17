@@ -1,0 +1,7 @@
+mutation AddFuelToCompany($companyId: ID!, $petrolTypeId: ID!) {
+  addPetrolToCompany(companyId: $companyId, petrolTypeId: $petrolTypeId)
+}
+
+mutation RemoveFuelFromCompany($companyId: ID!, $petrolTypeId: ID!) {
+  removePetrolFromCompany(companyId: $companyId, petrolTypeId: $petrolTypeId)
+}

@@ -2,7 +2,7 @@ import { IconButton, Paper, Typography } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Fade from "@mui/material/Fade";
 import Box from "@mui/system/Box";
-import { Icon } from "leaflet";
+import { DivIcon, Icon } from "leaflet";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Marker, useMap } from "react-leaflet";
@@ -11,6 +11,7 @@ import selectedCompanies from "../../src/atoms/selected-companies";
 import selectedStation from "../../src/atoms/selected-station";
 import { Station, useStationsQuery } from "../../src/gql/types";
 import RefreshIcon from "@mui/icons-material/Refresh";
+import classNames from "classnames";
 
 const canShowS = (zLevel: number) => zLevel >= 12;
 
@@ -227,11 +228,23 @@ const StationMarker: React.FC<IStationMarker> = ({ station }) => {
   return (
     <Marker
       icon={
-        new Icon({
-          iconUrl: uri,
-          //html: `<div className="mrkr"></div>`,
+        // new Icon({
+        //   iconUrl: uri,
+        //   //html: `<div className="mrkr"></div>`,
+        //   iconSize: [s, s],
+        //   className: selected?.id == station?.id ? "selected" : "",
+        // })
+
+        new DivIcon({
+          // iconUrl: uri,
+          html: `<div class="${classNames("station-marker", {
+            selected: selected?.id == station?.id,
+          })}">
+            <img src="${uri}"></img>
+          </div>`,
           iconSize: [s, s],
-          className: selected?.id == station?.id ? "selected" : "",
+          className: "",
+          // className: selected?.id == station?.id ? "selected" : "",
         })
       }
       key={station?.id}

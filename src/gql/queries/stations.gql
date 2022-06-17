@@ -68,3 +68,22 @@ query CurrentPrices($stationId: ID!) {
     }
   }
 }
+
+query StationAvailablePetrols($stationId: ID!) {
+  station(id: $stationId) {
+    id
+    company {
+      id
+      availablePetrols {
+        id
+        name
+        description
+        superType {
+          id
+          name
+          cat
+        }
+      }
+    }
+  }
+}
