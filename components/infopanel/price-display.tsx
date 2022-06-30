@@ -2,11 +2,13 @@ import {
   Avatar,
   Box,
   CircularProgress,
+  Container,
   IconButton,
   List,
   ListItem,
   ListItemAvatar,
   ListItemButton,
+  Skeleton,
   Tooltip,
   Typography,
 } from "@mui/material";
@@ -23,6 +25,7 @@ import styles from "../../styles/petrol.module.scss";
 import moment from "moment";
 import ConfirmPrice from "./confirm-price";
 import CheckIcon from "@mui/icons-material/Check";
+import SentimentDissatisfiedIcon from "@mui/icons-material/SentimentDissatisfied";
 
 const getIcon = (name: string, cat: string, name2: string) => {
   // try parse to int
@@ -91,13 +94,68 @@ const PriceDisplay: React.FC<IProps> = ({ stationId }) => {
 
   if (loading)
     return (
-      <div>
-        <CircularProgress />
-      </div>
+      <List dense>
+        {Array(3)
+          .fill((x: any) => null)
+          .map((x, i) => (
+            <ListItem key={i}>
+              <ListItemAvatar sx={{ width: "20px" }}></ListItemAvatar>
+              <Box>
+                <Box sx={{ display: "flex", flexDirection: "column" }}>
+                  <Box sx={{ fontWeight: "bold" }}>
+                    <Skeleton variant="text" width={100} />
+                  </Box>
+                  <Box sx={{ fontSize: "14px" }}>
+                    <Skeleton variant="text" width={250} />
+                  </Box>
+                  <Box sx={{ fontSize: "12px" }}>
+                    <Skeleton variant="text" width={250} />
+                  </Box>
+                </Box>
+              </Box>
+            </ListItem>
+          ))}
+      </List>
     );
-  if (error) return <div>Error</div>;
+
+  if (error)
+    return (
+      <Box
+        sx={{
+          p: 2,
+          height: 125,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <SentimentDissatisfiedIcon fontSize={"large"} sx={{ mb: 1 }} />
+        {t("prices:error")}
+      </Box>
+    );
 
   const prices = data?.station?.prices ?? [];
+
+  if (!prices || prices.length === 0) {
+    return (
+      <Box
+        sx={{
+          p: 2,
+          height: 125,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <SentimentDissatisfiedIcon fontSize={"large"} sx={{ mb: 1 }} />
+        <Typography>{t("prices:noData")}</Typography>
+        <Typography variant="body2">{t("prices:noDataDesc")}</Typography>
+        <CreatePrice station={data?.station as Station} onUpdate={onUpdate} />
+      </Box>
+    );
+  }
 
   return (
     <>

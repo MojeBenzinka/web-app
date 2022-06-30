@@ -27,9 +27,13 @@ const cs = {
   },
   prices: {
     title: "Historie cen",
-    noData: "Žádná data",
+    noData: "Nejsou k dispozici žádná data",
+    noDataDesc: "Pomozte ostatním uživatelům a zadejte ceny",
+    error: "Nastala chyba při načítání cen",
     history: {
       title: "Vývoj cen",
+      error: "Chyba při načítání historie cen",
+      noData: "Nedostatek dat k zobrazení historie cen",
     },
     updated: "Aktualizováno {{date}}",
     update: {

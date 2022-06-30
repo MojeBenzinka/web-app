@@ -10,6 +10,7 @@ import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTranslation } from "react-i18next";
 import moment from "moment";
+import { LinearProgress } from "@mui/material";
 
 interface Data {
   primary: Date;
@@ -80,29 +81,6 @@ const PriceChart: React.FC<IProps> = ({ stationId }) => {
         };
       });
 
-    // for (const p of prices) {
-    //   if (!p) continue;
-    //   const existing = pricesGroupped.find((x) => x.label == p.type?.name);
-
-    //   if (existing) {
-    //     existing.data.push({
-    //       primary: new Date(p.updatedAt),
-    //       secondary: p.price,
-    //     });
-    //     continue;
-    //   }
-
-    //   pricesGroupped.push({
-    //     label: p.type?.name,
-    //     data: [
-    //       {
-    //         primary: new Date(p.updatedAt),
-    //         secondary: p.price,
-    //       },
-    //     ],
-    //   });
-    // }
-
     return pricesGroupped;
   }, [data]);
 
@@ -141,15 +119,35 @@ const PriceChart: React.FC<IProps> = ({ stationId }) => {
   const { t } = useTranslation();
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LinearProgress variant="indeterminate" />;
   }
 
   if (error) {
-    return <div>Error!</div>;
+    return (
+      <Box
+        sx={{
+          p: 2,
+          height: 20,
+          display: "flex",
+        }}
+      >
+        {t("prices:history:error")}
+      </Box>
+    );
   }
 
   if (!data || !data.station || !stationId || datatata.length == 0) {
-    return <div>No data</div>;
+    return (
+      <Box
+        sx={{
+          p: 2,
+          height: 20,
+          display: "flex",
+        }}
+      >
+        {t("prices:history:noData")}
+      </Box>
+    );
   }
 
   return (

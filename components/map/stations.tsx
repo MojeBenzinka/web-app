@@ -17,7 +17,11 @@ import Link from "next/link";
 
 const canShowS = (zLevel: number) => zLevel >= 12;
 
-const Stations: React.FC = () => {
+interface IProps {
+  stations?: Station[];
+}
+
+const Stations: React.FC<IProps> = ({ stations: ds = [] }) => {
   const companyIds = useRecoilValue(selectedCompanies);
   const [, setSelectedStation] = useRecoilState(selectedStation);
   const [toOpenId, setToOpenId] = useState<string | null>(null);
@@ -49,9 +53,9 @@ const Stations: React.FC = () => {
   // }, [z]);
 
   const visibleMarkers = useMemo<Station[]>(() => {
-    if (!data || !data.stations) return [];
+    if (!ds && (!data || !data.stations)) return [];
 
-    const stations = data.stations as Station[];
+    const stations = (data?.stations as Station[]) ?? ds;
 
     const stats = stations.filter((s) => {
       const { lat, lon } = s;
@@ -60,7 +64,7 @@ const Stations: React.FC = () => {
     });
 
     return stats;
-  }, [data, bounds, center]);
+  }, [data, bounds, center, ds]);
 
   // const onMove = (event: LeafletEvent) => {
   //   if (timer) {
@@ -141,7 +145,7 @@ const Stations: React.FC = () => {
   //   return data.stations as Station[];
   // }, [data]);
 
-  if (loading && !previousData) {
+  if (!ds && loading && !previousData) {
     return <CircularProgress />;
   }
 

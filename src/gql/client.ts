@@ -17,9 +17,6 @@ const errorLink = onError(({ graphQLErrors, networkError, operation }) => {
         "| Error response:",
         err
       );
-      if (err?.extensions?.code === "invalid-jwt") {
-        console.error("Invalid JWT");
-      }
     }
   }
 });
@@ -47,6 +44,31 @@ export const client = new ApolloClient({
   link: from([
     errorLink,
     authLink,
+    new HttpLink({
+      uri: GQLEndpoint,
+    }),
+  ]),
+
+  cache: new InMemoryCache(),
+  defaultOptions: {
+    watchQuery: {
+      errorPolicy: "none",
+      notifyOnNetworkStatusChange: true,
+      fetchPolicy: "cache-and-network",
+    },
+    query: {
+      errorPolicy: "none",
+      notifyOnNetworkStatusChange: true,
+    },
+    mutate: {
+      errorPolicy: "none",
+    },
+  },
+});
+
+export const ssrClient = new ApolloClient({
+  link: from([
+    errorLink,
     new HttpLink({
       uri: GQLEndpoint,
     }),

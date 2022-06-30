@@ -1,5 +1,6 @@
+import { gql } from "@apollo/client";
 import Box from "@mui/material/Box";
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage } from "next";
 import Head from "next/head";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -7,10 +8,16 @@ import { useRecoilState } from "recoil";
 import InfoPanel from "../components/infopanel/infopanel";
 import MainLayout from "../components/layout/main-layout";
 import DynamicMap from "../components/map/mapdynamic";
+import { client, ssrClient } from "../src/gql/client";
+import type { Station, StationsQuery } from "../src/gql/types";
 
 // const drawerWidth = 500;
 
-const Home: NextPage = () => {
+interface IProps {
+  stations: Station[];
+}
+
+const Home: NextPage<IProps> = ({ stations }) => {
   const { t } = useTranslation();
 
   return (
@@ -27,7 +34,7 @@ const Home: NextPage = () => {
           height: "100vh",
         }}
       >
-        <DynamicMap />
+        <DynamicMap stations={stations} />
         <InfoPanel />
       </Box>
     </MainLayout>
@@ -35,3 +42,36 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export const getStaticProps: GetStaticProps<IProps> = async (context) => {
+  const res = await ssrClient.query<StationsQuery>({
+    query: gql`
+      query Stations {
+        stations {
+          id
+          lat
+          lon
+          company {
+            id
+            name
+            logo_img
+          }
+        }
+      }
+    `,
+  });
+
+  if (!res.error && res.data && res.data.stations) {
+    return {
+      props: {
+        stations: res.data.stations as Station[],
+      },
+    };
+  }
+
+  return {
+    props: {
+      stations: [],
+    },
+  };
+};

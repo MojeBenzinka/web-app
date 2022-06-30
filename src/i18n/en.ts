@@ -27,9 +27,13 @@ const en = {
   },
   prices: {
     title: "Prices history",
-    noData: "No data",
+    noData: "No data available",
+    noDataDesc: "Help other users and enter prices",
+    error: "Error loading prices",
     history: {
       title: "Prices history",
+      error: "Error loading prices history",
+      noData: "Not enough data to show prices history",
     },
     updated: "Updated {{date}}",
     update: {
