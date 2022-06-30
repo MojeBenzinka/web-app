@@ -129,7 +129,7 @@ const LocationLayer: React.FC = () => {
         className={styles.locationButton}
         display="flex"
         flexDirection="column"
-        alignItems={"center"}
+        alignItems={"end"}
       >
         <Box className="zoom-control" sx={{ mb: 2 }}>
           <ButtonGroup

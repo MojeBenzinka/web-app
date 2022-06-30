@@ -50,13 +50,19 @@ const InfoPanel: React.FC = () => {
   return (
     <div>
       <Drawer
-        sx={{
+        sx={(theme) => ({
           width: 500,
           flexShrink: 0,
           "& .MuiDrawer-paper": {
-            width: 500,
+            [theme.breakpoints.up("md")]: {
+              width: 500,
+            },
+            [theme.breakpoints.down("md")]: {
+              width: "100%",
+            },
+            minHeight: "100vh",
           },
-        }}
+        })}
         variant="persistent"
         anchor="right"
         open={!!selected}

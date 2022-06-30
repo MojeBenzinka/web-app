@@ -31,6 +31,7 @@ const en = {
     history: {
       title: "Prices history",
     },
+    updated: "Updated {{date}}",
     update: {
       title: "Update",
       toEdit: "To edit hold Ctrl and click the price",
@@ -40,6 +41,12 @@ const en = {
       cancel: "Cancel",
       success: "Price was successfully updated",
       error: "Error updating price",
+    },
+    confirm: {
+      title: "Confirm price",
+      description: "Has the price stayed the same for {{title}}?",
+      submit: "Save",
+      cancel: "Cancel",
     },
     create: {
       success: "Price was successfully created",

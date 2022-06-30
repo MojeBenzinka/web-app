@@ -1,4 +1,4 @@
-import { IconButton, Paper, Typography } from "@mui/material";
+import { IconButton, Paper, Tooltip, Typography } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
 import Fade from "@mui/material/Fade";
 import Box from "@mui/system/Box";
@@ -12,6 +12,8 @@ import selectedStation from "../../src/atoms/selected-station";
 import { Station, useStationsQuery } from "../../src/gql/types";
 import RefreshIcon from "@mui/icons-material/Refresh";
 import classNames from "classnames";
+import FeedbackIcon from "@mui/icons-material/Feedback";
+import Link from "next/link";
 
 const canShowS = (zLevel: number) => zLevel >= 12;
 
@@ -114,7 +116,6 @@ const Stations: React.FC = () => {
   useEffect(() => {
     if (data && !loading && !previousData && toOpenId) {
       const station = data.stations?.find((s) => s.id === toOpenId);
-      console.log(station);
       if (station) {
         setSelectedStation(station as Station);
       }
@@ -172,6 +173,15 @@ const Stations: React.FC = () => {
         >
           <RefreshIcon />
         </IconButton>
+        <Link href="https://helpdesk.kdenatankuju.cz/" passHref>
+          <a rel="noreferrer" target="_blank">
+            <Tooltip title="Feedback">
+              <IconButton color="primary">
+                <FeedbackIcon />
+              </IconButton>
+            </Tooltip>
+          </a>
+        </Link>
       </div>
       {canShowStations &&
         visibleMarkers.map((station) => (

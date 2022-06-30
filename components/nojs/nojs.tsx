@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 import React from "react";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
@@ -20,6 +21,11 @@ const NoJS: React.FC = () => {
           Learn how to enable JavaScript
         </a>
       </Typography>
+      <img
+        src="//analytics.kdenatankuju.cz/matomo.php?idsite=1&amp;rec=1"
+        style={{ border: 0 }}
+        alt=""
+      />
     </Container>
   );
 };

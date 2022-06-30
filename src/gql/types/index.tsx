@@ -80,20 +80,25 @@ export type Price = {
   __typename?: 'Price';
   createdAt: Scalars['Date'];
   currency: Scalars['String'];
+  date: Scalars['Date'];
   id: Scalars['ID'];
   price: Scalars['Float'];
   type: PetrolType;
   updatedAt: Scalars['Date'];
-  validFrom: Scalars['Date'];
-  validTo?: Maybe<Scalars['Date']>;
 };
 
 export type Query = {
   __typename?: 'Query';
   companies?: Maybe<Array<Company>>;
   petrolTypes?: Maybe<Array<PetrolType>>;
+  search?: Maybe<Array<SearchResult>>;
   station: Station;
   stations?: Maybe<Array<Station>>;
+};
+
+
+export type QuerySearchArgs = {
+  query: Scalars['String'];
 };
 
 
@@ -108,6 +113,17 @@ export type QueryStationsArgs = {
   north?: InputMaybe<Scalars['Float']>;
   south?: InputMaybe<Scalars['Float']>;
   west?: InputMaybe<Scalars['Float']>;
+};
+
+export type SearchResult = {
+  __typename?: 'SearchResult';
+  boundingbox?: Maybe<Array<Scalars['String']>>;
+  class: Scalars['String'];
+  display_name: Scalars['String'];
+  lat: Scalars['Float'];
+  lon: Scalars['Float'];
+  place_id: Scalars['ID'];
+  type: Scalars['String'];
 };
 
 export type Station = {
@@ -181,14 +197,14 @@ export type StationQueryVariables = Exact<{
 }>;
 
 
-export type StationQuery = { __typename?: 'Query', station: { __typename?: 'Station', id: string, pricesHistory?: Array<Array<{ __typename?: 'Price', id: string, currency: string, price: number, validFrom: any, validTo?: any | null, type: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } } }> | null> | null } };
+export type StationQuery = { __typename?: 'Query', station: { __typename?: 'Station', id: string, pricesHistory?: Array<Array<{ __typename?: 'Price', id: string, currency: string, price: number, updatedAt: any, date: any, type: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } } }> | null> | null, prices?: Array<{ __typename?: 'Price', id: string, currency: string, price: number, date: any, type: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } } }> | null } };
 
 export type CurrentPricesQueryVariables = Exact<{
   stationId: Scalars['ID'];
 }>;
 
 
-export type CurrentPricesQuery = { __typename?: 'Query', station: { __typename?: 'Station', id: string, prices?: Array<{ __typename?: 'Price', id: string, currency: string, price: number, validFrom: any, validTo?: any | null, type: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } } }> | null } };
+export type CurrentPricesQuery = { __typename?: 'Query', station: { __typename?: 'Station', id: string, prices?: Array<{ __typename?: 'Price', id: string, currency: string, price: number, date: any, updatedAt: any, type: { __typename?: 'PetrolType', id: string, name: string, description?: string | null, superType: { __typename?: 'PetrolSuperType', cat: string, name: string, id: string } } }> | null } };
 
 export type StationAvailablePetrolsQueryVariables = Exact<{
   stationId: Scalars['ID'];
@@ -465,8 +481,24 @@ export const StationDocument = gql`
       id
       currency
       price
-      validFrom
-      validTo
+      updatedAt
+      date
+      type {
+        id
+        name
+        description
+        superType {
+          cat
+          name
+          id
+        }
+      }
+    }
+    prices {
+      id
+      currency
+      price
+      date
       type {
         id
         name
@@ -517,8 +549,8 @@ export const CurrentPricesDocument = gql`
       id
       currency
       price
-      validFrom
-      validTo
+      date
+      updatedAt
       type {
         id
         name

@@ -31,6 +31,7 @@ const cs = {
     history: {
       title: "Vývoj cen",
     },
+    updated: "Aktualizováno {{date}}",
     update: {
       title: "Aktualizovat",
       toEdit: "Pro úpravu podržte Ctrl a klikněte na cenu",
@@ -40,6 +41,12 @@ const cs = {
       cancel: "Zrušit",
       success: "Cena byla úspěšně aktualizována",
       error: "Chyba při aktualizaci ceny",
+    },
+    confirm: {
+      title: "Potvrdit cenu",
+      description: "Zůstala tato cena stejná pro {{title}}?",
+      submit: "Uložit",
+      cancel: "Zrušit",
     },
     create: {
       success: "Cena byla úspěšně vytvořena",

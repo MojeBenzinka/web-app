@@ -30,8 +30,24 @@ query Station($stationId: ID!) {
       id
       currency
       price
-      validFrom
-      validTo
+      updatedAt
+      date
+      type {
+        id
+        name
+        description
+        superType {
+          cat
+          name
+          id
+        }
+      }
+    }
+    prices {
+      id
+      currency
+      price
+      date
       type {
         id
         name
@@ -53,8 +69,8 @@ query CurrentPrices($stationId: ID!) {
       id
       currency
       price
-      validFrom
-      validTo
+      date
+      updatedAt
       type {
         id
         name

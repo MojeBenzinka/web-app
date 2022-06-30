@@ -1,6 +1,5 @@
 import Box from "@mui/material/Box";
 import { useTheme } from "@mui/material/styles";
-import moment from "moment";
 import React, { useMemo } from "react";
 import { AxisOptions, Chart, UserSerie } from "react-charts";
 import { useStationQuery } from "../../src/gql/types";
@@ -10,6 +9,7 @@ import AccordionDetails from "@mui/material/AccordionDetails";
 import Typography from "@mui/material/Typography";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import { useTranslation } from "react-i18next";
+import moment from "moment";
 
 interface Data {
   primary: Date;
@@ -53,28 +53,21 @@ const PriceChart: React.FC<IProps> = ({ stationId }) => {
   const datatata = useMemo<UserSerie<Data>[]>(() => {
     const prices = data?.station?.pricesHistory ?? [];
 
+    const current = data?.station?.prices ?? [];
+
     const pricesGroupped: UserSerie<Data>[] = prices
       .filter((p) => p != null && p.length > 0)
-      .map((p) => {
-        const data = p!.map((price) =>
-          price?.validTo && price?.validTo == price?.validFrom
-            ? [
-                {
-                  primary: new Date(price?.validFrom),
-                  secondary: price?.price ?? 0,
-                },
-                {
-                  primary: new Date(price?.validTo),
-                  secondary: price?.price ?? 0,
-                },
-              ]
-            : [
-                {
-                  primary: new Date(price?.validFrom),
-                  secondary: price?.price ?? 0,
-                },
-              ]
-        );
+      .map((p, i) => {
+        const data: Data[][] = p!.map((price) => {
+          const date = new Date(price?.date);
+
+          return [
+            {
+              primary: date,
+              secondary: price?.price ?? 0,
+            },
+          ];
+        });
 
         // make into one array
         const d = data.reduce((acc, cur) => {
