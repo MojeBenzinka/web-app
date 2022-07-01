@@ -15,6 +15,7 @@ import { init } from "@socialgouv/matomo-next";
 import { useEffect } from "react";
 import { MATOMO_SITE_ID, MATOMO_URL } from "../src/constants";
 import Script from "next/script";
+import Head from "next/head";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +38,9 @@ const MyApp = ({ Component, pageProps }: AppProps) => {
 
   return (
     <>
+      <Head>
+        <link rel="icon" href="/logo.png" />
+      </Head>
       <RecoilRoot>
         <ThemeProvider theme={theme(prefersDarkMode)}>
           <SnackbarProvider className="snacks">

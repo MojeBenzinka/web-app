@@ -35,6 +35,13 @@ const cs = {
       error: "Chyba při načítání historie cen",
       noData: "Nedostatek dat k zobrazení historie cen",
     },
+    coi: {
+      title: "Zprávy ČOI",
+      description: "Pokuty za nejakostní paliva od České obchodní inspekce",
+      issued: "Kontrola provedena {{date}}",
+      fine: "Pokuta: {{sum}}",
+      readMore: "Číst více",
+    },
     updated: "Aktualizováno {{date}}",
     update: {
       title: "Aktualizovat",

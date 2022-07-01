@@ -47,7 +47,7 @@ const CreatePrice: React.FC<IProps> = ({ onUpdate, station }) => {
   const [open, setOpen] = useState(false);
 
   const { data, loading, error } = useStationAvailablePetrolsQuery({
-    variables: { stationId: station.id },
+    variables: { stationId: station?.id },
   });
 
   // const { data, loading, error } = usePetrolTypesQuery();

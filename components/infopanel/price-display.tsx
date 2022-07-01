@@ -67,9 +67,11 @@ interface IProps {
 }
 
 const PriceDisplay: React.FC<IProps> = ({ stationId }) => {
-  const { data, loading, error, refetch } = useCurrentPricesQuery({
-    variables: { stationId },
-  });
+  const { data, loading, error, refetch, previousData } = useCurrentPricesQuery(
+    {
+      variables: { stationId },
+    }
+  );
 
   const [price, setPrice] = useState<Price | null>(null);
   const [confirmPrice, setConfirmPrice] = useState<Price | null>(null);
@@ -92,7 +94,7 @@ const PriceDisplay: React.FC<IProps> = ({ stationId }) => {
     await refetch({ stationId });
   };
 
-  if (loading)
+  if (loading && !previousData)
     return (
       <List dense>
         {Array(3)
