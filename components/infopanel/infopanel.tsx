@@ -13,6 +13,7 @@ import { useClipboard } from "use-clipboard-copy";
 import { useSnackbar } from "notistack";
 import PriceDisplay from "./price-display";
 import { Divider } from "@mui/material";
+import CoiSummary from "./coi-sum";
 
 const InfoPanel: React.FC = () => {
   const [selected, setSelected] = useRecoilState(selectedStation);
@@ -102,6 +103,7 @@ const InfoPanel: React.FC = () => {
           </Box>
           <Divider sx={{ marginBottom: 2 }} />
           {selected && <PriceChart stationId={selected.id} />}
+          {selected && <CoiSummary stationId={selected.id} />}
           <Divider sx={{ marginTop: 2 }} />
           <Box sx={{ marginTop: 3, fontSize: 12 }}>
             Station ID:

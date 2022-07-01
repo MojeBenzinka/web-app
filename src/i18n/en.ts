@@ -25,6 +25,13 @@ const en = {
       cancel: "Cancel",
     },
   },
+  coi: {
+    title: "Zprávy ČOI",
+    description: "Pokuty za nejakostní paliva od České obchodní inspekce",
+    issued: "Kontrola provedena {{date}}",
+    fine: "Pokuta: {{sum}}",
+    readMore: "Read more",
+  },
   prices: {
     title: "Prices history",
     noData: "No data available",

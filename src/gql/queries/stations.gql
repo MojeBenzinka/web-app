@@ -103,3 +103,23 @@ query StationAvailablePetrols($stationId: ID!) {
     }
   }
 }
+
+query StationCoiProblems($stationId: ID!) {
+  station(id: $stationId) {
+    id
+    company {
+      id
+      coiProblems {
+        nid
+        title
+        field_summary_1
+        field_pokuta
+        field_currency
+        field_link_na_rozhodnuti
+        field_ph
+        field_inspektorat
+        field_datum
+      }
+    }
+  }
+}
